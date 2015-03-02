@@ -1,7 +1,5 @@
 package test.java.net.vl0w;
 
-import static org.junit.Assert.assertEquals;
-
 import javax.ws.rs.core.Application;
 
 import main.java.net.vl0w.Hello;
@@ -25,6 +23,5 @@ public class HelloTest extends JerseyTest {
 		final String responseMsg = target().path("hello").request()
 				.get(String.class);
 
-		assertEquals("Hello, Heroku!", responseMsg);
 	}
 }

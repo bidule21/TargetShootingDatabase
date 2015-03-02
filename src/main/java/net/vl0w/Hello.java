@@ -11,6 +11,6 @@ public class Hello {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt() {
-		return "Hello, Heroku!";
+		return System.getenv("net.vl0w.isd.pw_readonly");
 	}
 }
