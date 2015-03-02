@@ -3,4 +3,4 @@ deploy:
   provider: heroku
   api_key:
     secure: "FIoZFSx5+/3pOI/2hPfy9wm6Bm5f/i5F4fqbRaTXfaqDP84L55E5JAY7VjcQu+lT524YweAqXs00gq6SacOrueuYuP3vuqw2OWFWMloWfi27PpZ1He+lARjx9zESXxQbKrlQXXTs+FmrgwjgkHHhybVJqR046a/+PgjEf5syg1k="
-  app: TargetShootingDatabase
+  app: targetshootingdatabase
