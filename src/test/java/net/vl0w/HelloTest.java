@@ -21,8 +21,8 @@ public class HelloTest extends JerseyTest {
 	 * Test to see that the message "Got it!" is sent in the response.
 	 */
 	@Test
-	public void testGetIt() {
-		final String responseMsg = target().path("myresource").request()
+	public void testHello() {
+		final String responseMsg = target().path("hello").request()
 				.get(String.class);
 
 		assertEquals("Hello, Heroku!", responseMsg);
