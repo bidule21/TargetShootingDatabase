@@ -1,1 +1,1 @@
-web: java -cp target/classes:target/dependency/* net.vl0w.heroku.Main
+web: java -cp target/classes:target/dependency/* main.java.net.vl0w.heroku.Main
