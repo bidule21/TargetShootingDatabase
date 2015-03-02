@@ -2,5 +2,5 @@ language: java
 deploy:
   provider: heroku
   api_key:
-    secure: "jm+AYm4Enq6cdb5zKkf4a1e3MKlIdqSdesDIoVxytnzrLwKkP3P01k/FEsWAfIwiycrhI/oWy9A0sse8tra90JqaCEtXVFfFGUXcG7yrKGuCCG5CSLeaWNsyo5FKMqW49VfOMyS8m4GoK2/6DvC+G+q7QlZUfuCsIOlghUTGgwU="
+    secure: "bKHCE5OSw59KszVhMQc/bFJGyNVjmndzbHsFev55ySRY3T4o42cDAkEC3rb8Cb/CRDdcqjhgpsA5WqDl3vEqxbHY7817o4v29wrHUGd6DSOx7AKR5kdkppiN4ecvzKqHKtAh47EainwVorbVm2pLMf35r7svy0R7m3dFQcKSYXk="
   app: targetshootingdatabase
