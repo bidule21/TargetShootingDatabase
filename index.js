@@ -36,9 +36,10 @@ MongoClient.connect(url, function(err, db) {
 // ENABLE ROUTINGS
 
 
-app.get('/', function (req, res) {
+app.get("/", function (req, res) {
   res.send("RUNNING SKELETON");
 });
+
 
 
 
