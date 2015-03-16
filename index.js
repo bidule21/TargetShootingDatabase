@@ -7,15 +7,23 @@ var http = require('http'),
 var app = express();
 app.set('port', process.env.PORT || 3000);
 
-// Database imports
+// SETUP DATABASE
+
 var collectionDriver;
 var mongoHost = process.env.DB_HOST;
 var mongoDatabaseName = process.env.DB_NAME;
 var mongoUser = process.env.DB_USER;
 var mongoPassword = process.env.DB_PASSWORD;
 
+var url;
+if(mongoUser && mongoPassword){
+    url = "mongodb://"+mongoUser+":"+mongoPassword+"@"+mongoHost+"/"+mongoDatabaseName;
+} else{
+    url = "mongodb://"+mongoHost+"/"+mongoDatabaseName;
+}
 
-MongoClient.connect("mongodb://"+mongoUser+":"+mongoPassword+"@"+mongoHost+"/"+mongoDatabaseName, function(err, db) {
+
+MongoClient.connect(url, function(err, db) {
   if(!err) {
       console.log("Connection to MongoDB successfully established");
       collectionDriver = new CollectionDriver(db);
@@ -26,10 +34,7 @@ MongoClient.connect("mongodb://"+mongoUser+":"+mongoPassword+"@"+mongoHost+"/"+m
 });
 
 
-// APPLICATION ROUTING
-//
-//
-//
+// ENABLE ROUTINGS
 
 
 app.get('/', function (req, res) {
