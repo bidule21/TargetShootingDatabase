@@ -2,6 +2,8 @@ var http = require("http"),
     express = require("express"),
     MongoClient = require("mongodb").MongoClient,
     CollectionDriver = require("./collectionDriver").CollectionDriver;
+    mongoose = require('mongoose');
+
 
 var app = express();
 app.set("port", process.env.PORT || 3000);
@@ -22,14 +24,14 @@ if(mongoUser && mongoPassword){
 }
 
 
-MongoClient.connect(url, function(err, db) {
-  if(!err) {
-      console.log("Connection to MongoDB successfully established");
-      collectionDriver = new CollectionDriver(db);
-  }else{
-      console.error("Error! No connection to MongoDB " + mongoHost + ":" + mongoPort);
-      process.exit(1); 
-  }
+mongoose.connect(url);
+var db = mongoose.connection;
+db.on("error", function(callback){
+    console.error("Error! No connection to MongoDB");
+    process.exit(1); 
+});
+db.once("open", function (callback) {
+  console.log("Connection to MongoDB successfully established");
 });
 
 
@@ -40,6 +42,9 @@ app.get("/", function (req, res) {
   res.send("RUNNING SKELETON");
 });
 
+app.get("/shooters",function(req,res){
+    res.send(collectionDriver.findAllShooters());
+});
 
 
 
