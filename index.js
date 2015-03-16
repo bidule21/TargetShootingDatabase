@@ -1,11 +1,10 @@
-var http = require('http'),
-    express = require('express'),
-    MongoClient = require('mongodb').MongoClient,
-    Server = require('mongodb').Server,
-    CollectionDriver = require('./collectionDriver').CollectionDriver;
+var http = require("http"),
+    express = require("express"),
+    MongoClient = require("mongodb").MongoClient,
+    CollectionDriver = require("./collectionDriver").CollectionDriver;
 
 var app = express();
-app.set('port', process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3000);
 
 // SETUP DATABASE
 
@@ -38,7 +37,7 @@ MongoClient.connect(url, function(err, db) {
 
 
 app.get('/', function (req, res) {
-  res.send('RUNNING SKELETON');
+  res.send("RUNNING SKELETON");
 });
 
 
@@ -50,5 +49,5 @@ app.use(function (req,res) { //1
 });
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log("Express server listening on port " + app.get("port"));
 });
