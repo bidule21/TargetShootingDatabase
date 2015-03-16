@@ -9,8 +9,13 @@ app.set('port', process.env.PORT || 3000);
 
 // Database imports
 var collectionDriver;
+var mongoHost = process.env.DB_HOST;
+var mongoDatabaseName = process.env.DB_NAME;
+var mongoUser = process.env.DB_USER;
+var mongoPassword = process.env.DB_PASSWORD;
 
-MongoClient.connect("mongodb://"+process.env.USER_FULL+":"+process.env.PW_FULL+"@ds039261.mongolab.com:39261/heroku_app34497512", function(err, db) {
+
+MongoClient.connect("mongodb://"+mongoUser+":"+mongoPassword+"@"+mongoHost+"/"+mongoDatabaseName, function(err, db) {
   if(!err) {
       console.log("Connection to MongoDB successfully established");
       collectionDriver = new CollectionDriver(db);
