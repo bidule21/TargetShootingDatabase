@@ -35,22 +35,68 @@ db.once("open", function (callback) {
 });
 
 
-// ENABLE ROUTINGS
+// SCHEMAS
 
+var Schema = mongoose.Schema;
+var ObjectId = mongoose.Schema.Types.ObjectId;
+
+var shooterSchema = new Schema({
+    firstname: String,
+    lastname: String,
+    country: String
+});
+
+var eventSchema = new Schema({
+    name:String,
+    participations:[{shooter:ObjectId, result:ObjectId}]
+});
+
+var resultSchema = new Schema({
+    shooter:ObjectId,
+    category:String,
+    score:Number,
+    consists_of:[ObjectId]
+});
+
+var Shooter = mongoose.model("Shooter",shooterSchema);
+var Event = mongoose.model("Event",eventSchema);
+var Result = mongoose.model("Result",resultSchema);
+
+// ENABLE ROUTINGS
 
 app.get("/", function (req, res) {
   res.send("RUNNING SKELETON");
 });
 
 app.get("/shooters",function(req,res){
-    res.send(collectionDriver.findAllShooters());
+    Shooter.find(function(err,shooters){
+        res.send(shooters);
+    });
 });
 
+app.get("/shooters/rnew",function(req,res){
+    new Shooter().save(function(err,shooter){
+        if (err) res.error(err);
+        else res.send("Saved: "+shooter);
+    });
+});
 
+app.get("/shooters/:id",function(req,res){
+    Shooter.find(
+        {_id: req.params.id},
+        function(err,shooter){
+        res.send(shooter);
+    });
+});
 
+app.delete("/shooters/:id",function(req,res){
+    Shooter.findByIdAndRemove(req.params.id, function(deletedShooter){
+        res.send(deletedShooter);
+    });
+});
 
 // Error handling (when no rerouting has happened before)
-app.use(function (req,res) { //1
+app.use(function (req,res) {
     res.send("I don't know what you mean"); //2
 });
 
