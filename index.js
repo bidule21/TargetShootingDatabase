@@ -81,15 +81,15 @@ app.get("/shooters/rnew",function(req,res){
     });
 });
 
-app.get("/shooters/:id",function(req,res){
-    Shooter.find(
-        {_id: req.params.id},
+app.get("/shooter/:id",function(req,res){
+    Shooter.findById(
+        req.params.id,
         function(err,shooter){
         res.send(shooter);
     });
 });
 
-app.delete("/shooters/:id",function(req,res){
+app.delete("/shooter/:id",function(req,res){
     Shooter.findByIdAndRemove(req.params.id, function(deletedShooter){
         res.send(deletedShooter);
     });
