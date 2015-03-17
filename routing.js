@@ -20,22 +20,17 @@ module.exports = function (app) {
     });
 }
 
-function andReturnWhenNoErrors(err, objs, res) {
-    if (err) res.status(500).send("An error occured: " + err);
-    else res.status(200).send(objs);
-}
-
 function initShooterRoutings(app) {
     app.get("/shooters", findAllShooters);
     app.get("/shooter/:id", findShooterById);
     app.delete("/shooter/:id", findShooterByIdAndRemove);
 
     function findAllShooters(req, res) {
-        Shooter.find(function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
+        Shooter.find(function(err, objs) { returnObjsWhenNoErrorsOccured(err, objs, res); });
     }
 
     function findShooterById(req, res) {
-        Shooter.findById(req.params.id, function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
+        Shooter.findById(req.params.id, function(err, objs) { returnObjectsWhenNoErrorsOccured(err, objs, res); });
 
         
     }
@@ -58,7 +53,7 @@ function initResultRoutings(app) {
     function findResultsOfShooter(req, res) {
         Result.find({
             shooter: req.params.id
-        }, function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
+        }, function(err, objs) { returnObjectsWhenNoErrorsOccured(err, objs, res); });
 
     }
 
@@ -82,4 +77,9 @@ function initResultRoutings(app) {
                 }
             });
     });
+}
+
+function returnObjsWhenNoErrorsOccured(err, objs, res) {
+    if (err) res.status(500).send("An error occured: " + err);
+    else res.status(200).send(objs);
 }
