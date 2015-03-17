@@ -20,27 +20,24 @@ module.exports = function (app) {
     });
 }
 
+function andReturnWhenNoErrors(err, objs, res) {
+    if (err) res.status(500).send("An error occured: " + err);
+    else res.status(200).send(objs);
+}
+
 function initShooterRoutings(app) {
     app.get("/shooters", findAllShooters);
     app.get("/shooter/:id", findShooterById);
     app.delete("/shooter/:id", findShooterByIdAndRemove);
 
     function findAllShooters(req, res) {
-        Shooter.find(andReturnWhenNoErrors);
-
-        function andReturnWhenNoErrors(err, objs) {
-            if (err) res.status(500).send("An error occured: " + err);
-            else res.status(200).send(objs);
-        }
+        Shooter.find(function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
     }
 
     function findShooterById(req, res) {
-        Shooter.findById(req.params.id, andReturnWhenNoErrors);
+        Shooter.findById(req.params.id, function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
 
-        function andReturnWhenNoErrors(err, objs) {
-            if (err) res.status(500).send("An error occured: " + err);
-            else res.status(200).send(objs);
-        }
+        
     }
 
     function findShooterByIdAndRemove(req, res) {
@@ -61,13 +58,8 @@ function initResultRoutings(app) {
     function findResultsOfShooter(req, res) {
         Result.find({
             shooter: req.params.id
-        }, andReturnWhenNoErrors);
+        }, function(err, objs) { andReturnWhenNoErrors(err, objs, res); });
 
-
-        function andReturnWhenNoErrors(err, objs) {
-            if (err) res.status(500).send("An error occured: " + err);
-            else res.status(200).send(objs);
-        }
     }
 
 
