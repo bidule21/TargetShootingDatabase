@@ -15,8 +15,8 @@ var express = require("express");
 var app = express();
 app.set("port", process.env.PORT || 3000);
 
-var initRoutings = require("./routing");
-initRoutings(app);
+var initRouting = require("./routing");
+initRouting(app);
 
 // Start server
 var http = require("http");
