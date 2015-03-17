@@ -1,7 +1,6 @@
 var http = require("http"),
     express = require("express"),
-    mongoose = require('mongoose');
-
+    mongoose = require("mongoose");
 
 var app = express();
 app.set("port", process.env.PORT || 3000);
