@@ -1,7 +1,6 @@
 var http = require("http"),
     express = require("express"),
     MongoClient = require("mongodb").MongoClient,
-    CollectionDriver = require("./collectionDriver").CollectionDriver;
     mongoose = require('mongoose');
 
 
