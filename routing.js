@@ -26,7 +26,7 @@ function initShooterRoutings(app) {
     app.delete("/shooter/:id", findShooterByIdAndRemove);
 
     function findAllShooters(req, res) {
-        Shooter.find(function(err, objs) { returnObjsWhenNoErrorsOccured(err, objs, res); });
+        Shooter.find(function(err, objs) { returnObjectsWhenNoErrorsOccured(err, objs, res); });
     }
 
     function findShooterById(req, res) {
@@ -66,8 +66,17 @@ function initResultRoutings(app) {
                 if (!err) {
                     Result.create({
                             shooter: req.params.id,
-                            category: "Blab",
-                            consists_of: []
+                            category: "A30 Match",
+                            consists_of: [
+                                {
+                                    category:"A30 K 30",
+                                    score:290
+                                },
+                                {
+                                    category:"A30 S 30",
+                                    score:270
+                                }
+                            ]
                         },
                         function (err, result) {
                             res.send("Err: " + err + "Saved: " + result);
@@ -79,7 +88,7 @@ function initResultRoutings(app) {
     });
 }
 
-function returnObjsWhenNoErrorsOccured(err, objs, res) {
+function returnObjectsWhenNoErrorsOccured(err, objs, res) {
     if (err) res.status(500).send("An error occured: " + err);
     else res.status(200).send(objs);
 }
