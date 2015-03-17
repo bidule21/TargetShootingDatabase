@@ -1,6 +1,5 @@
 var http = require("http"),
     express = require("express"),
-    MongoClient = require("mongodb").MongoClient,
     mongoose = require('mongoose');
 
 
