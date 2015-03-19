@@ -9,7 +9,7 @@ db.on("error", function (callback) {
 db.once("open", function (callback) {
     console.log("Connection to MongoDB successfully established");
 });
-// 
+
 // Init express app
 var express = require("express");
 var app = express();
