@@ -67,16 +67,7 @@ function initResultRoutings(app) {
                     Result.create({
                             shooter: req.params.id,
                             category: "A30 Match",
-                            consists_of: [
-                                {
-                                    category:"A30 K 30",
-                                    score:290
-                                },
-                                {
-                                    category:"A30 S 30",
-                                    score:270
-                                }
-                            ]
+                            consists_of: []
                         },
                         function (err, result) {
                             res.send("Err: " + err + "Saved: " + result);
