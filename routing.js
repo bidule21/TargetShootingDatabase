@@ -18,7 +18,7 @@ module.exports = function (app) {
     app.use(function (req, res) {
         res.status(404).send("I don't know what you mean");
     });
-}
+};
 
 function initShooterRoutings(app) {
     app.get("/shooters", findAllShooters);
