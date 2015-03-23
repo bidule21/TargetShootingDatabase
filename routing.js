@@ -1,5 +1,5 @@
 var Shooter = require("./model/Shooter");
-var Result = require("./model").Result;
+var Result = require("./model/Result");
 
 module.exports = function (app) {
     app.get("/", function (req, res) {
