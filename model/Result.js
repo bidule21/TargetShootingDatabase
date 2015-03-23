@@ -7,23 +7,34 @@ var availableCategories = "A10 Final;A10 20;A10 40;A10 40 Final;A10 60;A10 60 Fi
 
 var resultSchema = new Schema({
     shooter: ObjectId,
-    category: {type:String, enum: availableCategories},
+    category: {
+        type: String,
+        enum: availableCategories
+    },
     score: Number,
     consists_of: [resultSchema]
 });
 
-resultSchema.methods.getScore = function(){
+resultSchema.methods.getChildren = function () {
+    var children = [];
+    this.consists_of.forEach(function (resultData) {
+        var Result = mongoose.model("Result", resultSchema);
+        var result = new Result(resultData);
+        children.push(result);
+    });
+    return children;
+};
+
+resultSchema.methods.getScore = function () {
     var score = 0;
-    if(this.consists_of.length>0){
-        this.consists_of.forEach(function(result){
+    if (this.getChildren().length > 0) {
+        this.getChildren().forEach(function (result) {
             score += result.getScore();
         });
-    }else{
+    } else {
         score = this.score;
     }
     return score;
 };
 
-var result = mongoose.model("Result", resultSchema);
-
-module.exports = result;
+module.exports = mongoose.model("Result", resultSchema);
