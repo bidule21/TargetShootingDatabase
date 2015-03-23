@@ -1,4 +1,4 @@
-var Shooter = require("./model").Shooter;
+var Shooter = require("./model/Shooter");
 var Result = require("./model").Result;
 
 module.exports = function (app) {

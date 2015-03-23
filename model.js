@@ -2,13 +2,6 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
-var shooterSchema = new Schema({
-    firstname: String,
-    lastname: String,
-    country: String
-});
-
-
 var eventSchema = new Schema({
     name: String
 });
@@ -27,5 +20,3 @@ var resultSchema = new Schema({
 exports.AvailableCategories = availableCategories;
 exports.Result = mongoose.model("Result", resultSchema);
 exports.Event = mongoose.model("Event", eventSchema);
-exports.Shooter = mongoose.model("Shooter", shooterSchema);
-
