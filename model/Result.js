@@ -12,6 +12,18 @@ var resultSchema = new Schema({
     consists_of: [resultSchema]
 });
 
+resultSchema.methods.getScore = function(){
+    var score = 0;
+    if(this.consists_of.length>0){
+        this.consists_of.forEach(function(result){
+            score += result.getScore();
+        });
+    }else{
+        score = this.score;
+    }
+    return score;
+};
+
 var result = mongoose.model("Result", resultSchema);
 
 module.exports = result;
