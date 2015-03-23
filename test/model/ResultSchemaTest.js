@@ -1,5 +1,5 @@
 var Result = require("../../model/Result");
-var ResultSchemaValidator = require("../../model/ResultSchemas").ResultSchemaValidator;
+var ResultSchemaValidator = require("../../model/ResultSchema").ResultSchemaValidator;
 
 
 describe("ResultSchema", function () {
@@ -15,7 +15,7 @@ describe("ResultSchema", function () {
     });
 
     it("should have a schema for every category", function () {
-        var allCategories = require("../../model/ResultSchemas").CAT_ALL;
+        var allCategories = require("../../model/ResultSchema").CAT_ALL;
         allCategories.forEach(function (category) {
             new ResultSchemaValidator(new Result({
                 category: category
@@ -24,7 +24,7 @@ describe("ResultSchema", function () {
     });
 
     describe("A10 1", function () {
-        var CAT_A10_1 = require("../../model/ResultSchemas").CAT_A10_1;
+        var CAT_A10_1 = require("../../model/ResultSchema").CAT_A10_1;
 
         it("should not have children", function () {
             checkOnlyZeroChildrenAreAllowed(CAT_A10_1);
@@ -32,8 +32,8 @@ describe("ResultSchema", function () {
     });
 
     describe("A10 10", function () {
-        var CAT_A10_10 = require("../../model/ResultSchemas").CAT_A10_10;
-        var CAT_A10_1 = require("../../model/ResultSchemas").CAT_A10_1;
+        var CAT_A10_10 = require("../../model/ResultSchema").CAT_A10_10;
+        var CAT_A10_1 = require("../../model/ResultSchema").CAT_A10_1;
 
         it("should consist of 0 or 10 results with category A10 1", function () {
             checkOnlyZeroOrXChildrenAreAllowed(CAT_A10_10, CAT_A10_1, 10);
@@ -41,8 +41,8 @@ describe("ResultSchema", function () {
     });
 
     describe("A10 20", function () {
-        var CAT_A10_20 = require("../../model/ResultSchemas").CAT_A10_20;
-        var CAT_A10_10 = require("../../model/ResultSchemas").CAT_A10_10;
+        var CAT_A10_20 = require("../../model/ResultSchema").CAT_A10_20;
+        var CAT_A10_10 = require("../../model/ResultSchema").CAT_A10_10;
 
         it("should consist of 0 or 2 results with category A10 10", function () {
             checkOnlyZeroOrXChildrenAreAllowed(CAT_A10_20, CAT_A10_10, 2);
