@@ -23,6 +23,22 @@ describe("ResultSchema", function () {
         });
     });
 
+    it("should always contain it's specified category", function () {
+        var CAT_A10_20 = require("../../model/ResultSchema").CAT_A10_20;
+        var CAT_A10_1 = require("../../model/ResultSchema").CAT_A10_1;
+
+        var result = new Result({
+            category: CAT_A10_20,
+            consists_of: [{
+                category: CAT_A10_1
+            }, {
+                category: CAT_A10_1
+            }]
+        });
+
+        expectInvalid(result, "A result may only have child categories which are specified in its schema");
+    });
+
     describe("A10 1", function () {
         var CAT_A10_1 = require("../../model/ResultSchema").CAT_A10_1;
 
@@ -52,10 +68,10 @@ describe("ResultSchema", function () {
 
 function checkOnlyZeroChildrenAreAllowed(category) {
     var resultWithZeroChildren = makeParentWithChildren(category, []);
-    var resultWithOneChild = makeParentWithChildren(category, [{}]);
+    var resultWithMultipleChildren = makeParentWithChildren(category, [{}, {}, {}]);
 
     expectValid(resultWithZeroChildren, "0 results (as children) should be allowed for category " + category);
-    expectInvalid(resultWithOneChild, "Not more than 0 children are allowed for category " + category);
+    expectInvalid(resultWithMultipleChildren, "Not more than 0 children are allowed for category " + category);
 }
 
 function checkOnlyZeroOrXChildrenAreAllowed(parentCategory, childCategory, legalAmountOfChildren) {
