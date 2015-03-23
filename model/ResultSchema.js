@@ -43,16 +43,12 @@ var resultSchemaValidator = function (result) {
 };
 
 resultSchemaValidator.prototype.isValid = function () {
-    if (this.schema) {
-        var children = this.result.getChildren();
+    var children = this.result.getChildren();
 
-        if (children.length === 0) {
-            return true;
-        } else if (children.length === this.schema.allowedChildren) {
-            return !containsOtherCategoryThan(this.schema.allowedChildrenCategory, this.result);
-        } else {
-            return false;
-        }
+    if (children.length === 0) {
+        return true;
+    } else if (children.length === this.schema.allowedChildren) {
+        return !containsOtherCategoryThan(this.schema.allowedChildrenCategory, this.result);
     } else {
         return false;
     }
