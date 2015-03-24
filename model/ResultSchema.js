@@ -1,24 +1,34 @@
+var CAT_A10_30 = "A10 30";
 var CAT_A10_20 = "A10 20";
 var CAT_A10_10 = "A10 10";
 var CAT_A10_1 = "A10 1";
-var CAT_ALL = [CAT_A10_1, CAT_A10_10, CAT_A10_20];
+var CAT_ALL = [CAT_A10_1, CAT_A10_10, CAT_A10_20, CAT_A10_30];
 
 
 var SCHEMAS = [
     {
         category: CAT_A10_1,
         allowedChildren: 0,
-        allowedChildrenCategory: undefined
+        allowedChildrenCategory: undefined,
+        maxScore: 10
     },
     {
         category: CAT_A10_10,
         allowedChildren: 10,
-        allowedChildrenCategory: CAT_A10_1
+        allowedChildrenCategory: CAT_A10_1,
+        maxScore: 100
     },
     {
         category: CAT_A10_20,
         allowedChildren: 2,
-        allowedChildrenCategory: CAT_A10_10
+        allowedChildrenCategory: CAT_A10_10,
+        maxScore: 200
+    },
+    {
+        category: CAT_A10_30,
+        allowedChildren: 3,
+        allowedChildrenCategory: CAT_A10_10,
+        maxScore: 300
     }
 ];
 
@@ -45,13 +55,27 @@ var resultSchemaValidator = function (result) {
 resultSchemaValidator.prototype.isValid = function () {
     var children = this.result.getChildren();
 
-    if (children.length === 0) {
-        return true;
-    } else if (children.length === this.schema.allowedChildren) {
-        return !containsOtherCategoryThan(this.schema.allowedChildrenCategory, this.result);
-    } else {
-        return false;
+    var valid = true;
+
+    // Amount of children and their category
+    if (children.length > 0) {
+        if (children.length === this.schema.allowedChildren) {
+            valid = !containsOtherCategoryThan(this.schema.allowedChildrenCategory, this.result);
+        } else {
+            valid = false;
+        }
     }
+
+    if (valid) {
+
+
+
+        if (this.result.getScore() < 0 || this.result.getScore() > this.schema.maxScore) {
+            valid = false;
+        }
+    }
+
+    return valid;
 };
 
 
@@ -67,6 +91,7 @@ function containsOtherCategoryThan(category, result) {
 }
 
 exports.ResultSchemaValidator = resultSchemaValidator;
+exports.CAT_A10_30 = CAT_A10_30;
 exports.CAT_A10_20 = CAT_A10_20;
 exports.CAT_A10_10 = CAT_A10_10;
 exports.CAT_A10_1 = CAT_A10_1;

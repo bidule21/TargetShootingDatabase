@@ -1,11 +1,11 @@
 var Result = require("../../model/Result");
 var ResultSchemaValidator = require("../../model/ResultSchema").ResultSchemaValidator;
+var CAT_A10_30 = require("../../model/ResultSchema").CAT_A10_30;
 var CAT_A10_20 = require("../../model/ResultSchema").CAT_A10_20;
 var CAT_A10_10 = require("../../model/ResultSchema").CAT_A10_10;
 var CAT_A10_1 = require("../../model/ResultSchema").CAT_A10_1;
 
 describe("ResultSchema", function () {
-
     it("should detect unknown categories", function () {
         (validatorWithInvalidResult).should.throw();
 
@@ -35,47 +35,146 @@ describe("ResultSchema", function () {
             }]
         });
 
-        expectInvalid(result, "A result may only have child categories which are specified in its schema");
+        checkInvalid(result, "A result may only have child categories which are specified in its schema");
     });
 
     describe("A10 1", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_1);
+
         it("should not have children", function () {
-            checkOnlyZeroChildrenAreAllowed(CAT_A10_1);
+            helper.checkOnlyZeroChildrenAreAllowed();
+        });
+
+        it("should have a score between 0 and 10", function () {
+            helper.checkScore(10);
         });
     });
 
     describe("A10 10", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_10);
+
         it("should consist of 0 or 10 results with category A10 1", function () {
-            checkOnlyZeroOrXChildrenAreAllowed(CAT_A10_10, CAT_A10_1, 10);
+            helper.setChildCategory(CAT_A10_1);
+            helper.checkZeroChildrenAreAllowed();
+            helper.checkOnlyAmountOfChildrenAreAllowed(10);
+        });
+
+        it("should have a score between 0 and 100", function () {
+            helper.checkScore(100);
         });
     });
 
     describe("A10 20", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_20);
+
         it("should consist of 0 or 2 results with category A10 10", function () {
-            checkOnlyZeroOrXChildrenAreAllowed(CAT_A10_20, CAT_A10_10, 2);
+            helper.setChildCategory(CAT_A10_10);
+            helper.checkZeroChildrenAreAllowed();
+            helper.checkOnlyAmountOfChildrenAreAllowed(2);
+        });
+
+        it("should have a score between 0 and 200", function () {
+            helper.checkScore(200);
+        });
+    });
+
+    describe("A10 30", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_30);
+
+        it("should consist of 0 or 3 results with category A10 10", function () {
+            helper.setChildCategory(CAT_A10_10);
+            helper.checkZeroChildrenAreAllowed();
+            helper.checkOnlyAmountOfChildrenAreAllowed(3);
+        });
+
+        it("should have a score between 0 and 300", function () {
+            helper.checkScore(300);
         });
     });
 });
 
-function checkOnlyZeroChildrenAreAllowed(category) {
-    var resultWithZeroChildren = makeParentWithChildren(category, []);
-    var resultWithMultipleChildren = makeParentWithChildren(category, [{}, {}, {}]);
-
-    expectValid(resultWithZeroChildren, "0 results (as children) should be allowed for category " + category);
-    expectInvalid(resultWithMultipleChildren, "Not more than 0 children are allowed for category " + category);
+function ResultSchemaTestHelper(category) {
+    this.category = category;
 }
 
-function checkOnlyZeroOrXChildrenAreAllowed(parentCategory, childCategory, legalAmountOfChildren) {
-    var illegalAmountOfChildren = legalAmountOfChildren - 1;
+ResultSchemaTestHelper.prototype.checkScore = function (maximum) {
+    var resultWithMinimumScore = new Result({
+        category: this.category,
+        score: 0
+    });
+    var resultWithMaximumScore = new Result({
+        category: this.category,
+        score: maximum
+    });
+    var resultWithScoreInBetween = new Result({
+        category: this.category,
+        score: maximum / 2
+    });
+    var resultWithNegativeScore = new Result({
+        category: this.category,
+        score: -1
+    });
+    var resultWithScoreOverflow = new Result({
+        category: this.category,
+        score: maximum + 1
+    });
 
-    var resultWithZeroChildren = makeParentWithChildren(parentCategory, []);
-    var resultWithLegalAmountOfChildren = makeParentWithChildren(parentCategory, split(childCategory, legalAmountOfChildren));
-    var resultWithIllegalAmountOfChildren = makeParentWithChildren(parentCategory, split(childCategory, illegalAmountOfChildren));
+    checkValid(resultWithMinimumScore,
+        this.category + " should allow results with a score of 0");
+    checkValid(resultWithMaximumScore,
+        this.category + " should allow results with a score of " + maximum);
+    checkValid(resultWithScoreInBetween,
+        this.category + " should allow results with a score of " + maximum / 2);
+    checkInvalid(resultWithNegativeScore,
+        this.category + " should not allow results with negative scores");
+    checkInvalid(resultWithScoreOverflow,
+        this.category + " should not allow results whose scores are bigger than " + maximum);
+};
 
-    expectValid(resultWithZeroChildren, "0 results (as children) should be allowed for category " + parentCategory);
-    expectValid(resultWithLegalAmountOfChildren, legalAmountOfChildren + " results (as children) should be allowed for category " + parentCategory);
-    expectInvalid(resultWithIllegalAmountOfChildren, illegalAmountOfChildren + " results (as children) should be allowed for category " + parentCategory);
-}
+ResultSchemaTestHelper.prototype.checkOnlyZeroChildrenAreAllowed = function () {
+    var resultWithZeroChildren = makeParentWithChildren(this.category, []);
+    var resultWithMultipleChildren = makeParentWithChildren(this.category, [{}]);
+
+    checkValid(resultWithZeroChildren,
+        "0 results (as children) should be allowed for category " + this.category);
+    checkInvalid(resultWithMultipleChildren,
+        "Not more than 0 children are allowed for category " + this.category);
+};
+
+ResultSchemaTestHelper.prototype.checkOnlyAmountOfChildrenAreAllowed = function (legalAmountOfChildren) {
+    var insufficientAmount = legalAmountOfChildren - 1;
+    var overflowAmount = legalAmountOfChildren + 1;
+
+    var resultWithLegalAmountOfChildren = makeParentWithChildren(
+        this.category,
+        split(this.childCategory, legalAmountOfChildren));
+    var resultWithInsufficientAmountOfChildren = makeParentWithChildren(
+        this.category,
+        split(this.childCategory, insufficientAmount));
+    var resultWithOverflowAmountOfChildren = makeParentWithChildren(
+        this.category,
+        split(this.childCategory, overflowAmount));
+
+    checkValid(resultWithLegalAmountOfChildren,
+        "A maximum of " + legalAmountOfChildren + " results (children) should be allowed for category " + this.category +
+        ". Maybe this amount exceeds the maximum amount " +
+        "of children or the maximum is specified wrong in the schema.");
+    checkInvalid(resultWithInsufficientAmountOfChildren,
+        insufficientAmount + " results (as children) should not be allowed for category " + this.category);
+    checkInvalid(resultWithOverflowAmountOfChildren,
+        overflowAmount + " results (as children) should not be allowed for category " + this.category);
+};
+
+ResultSchemaTestHelper.prototype.checkZeroChildrenAreAllowed = function () {
+    var resultWithZeroChildren = makeParentWithChildren(this.category, []);
+
+    checkValid(resultWithZeroChildren,
+        "0 results (as children) should be allowed for category " + this.category);
+};
+
+ResultSchemaTestHelper.prototype.setChildCategory = function (childCategory) {
+    this.childCategory = childCategory;
+};
 
 function split(str, times) {
     var strs = [];
@@ -104,12 +203,12 @@ function makeResults(categories) {
     return results;
 }
 
-function expectValid(result, message) {
+function checkValid(result, message) {
     var validator = new ResultSchemaValidator(result);
     validator.isValid().should.be.exactly(true, message);
 }
 
-function expectInvalid(result, message) {
+function checkInvalid(result, message) {
     var validator = new ResultSchemaValidator(result);
     validator.isValid().should.be.exactly(false, message);
 }
