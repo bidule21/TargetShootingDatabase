@@ -1,5 +1,7 @@
 var Result = require("../../model/Result");
 var ResultSchemaValidator = require("../../model/ResultSchema").ResultSchemaValidator;
+var CAT_A10_60 = require("../../model/ResultSchema").CAT_A10_60;
+var CAT_A10_40 = require("../../model/ResultSchema").CAT_A10_40;
 var CAT_A10_30 = require("../../model/ResultSchema").CAT_A10_30;
 var CAT_A10_20 = require("../../model/ResultSchema").CAT_A10_20;
 var CAT_A10_10 = require("../../model/ResultSchema").CAT_A10_10;
@@ -89,6 +91,34 @@ describe("ResultSchema", function () {
 
         it("should have a score between 0 and 300", function () {
             helper.checkScore(300);
+        });
+    });
+
+    describe("A10 40", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_40);
+
+        it("should consist of 0 or 4 results with category A10 10", function () {
+            helper.setChildCategory(CAT_A10_10);
+            helper.checkZeroChildrenAreAllowed();
+            helper.checkOnlyAmountOfChildrenAreAllowed(4);
+        });
+
+        it("should have a score between 0 and 400", function () {
+            helper.checkScore(400);
+        });
+    });
+
+    describe("A10 60", function () {
+        var helper = new ResultSchemaTestHelper(CAT_A10_60);
+
+        it("should consist of 0 or 6 results with category A10 10", function () {
+            helper.setChildCategory(CAT_A10_10);
+            helper.checkZeroChildrenAreAllowed();
+            helper.checkOnlyAmountOfChildrenAreAllowed(6);
+        });
+
+        it("should have a score between 0 and 600", function () {
+            helper.checkScore(600);
         });
     });
 });
