@@ -1,5 +1,13 @@
 var Result = require("../../model/Result");
 var ResultSchemaValidator = require("../../model/ResultSchema").ResultSchemaValidator;
+var CAT_A30_S_30 = require("../../model/ResultSchema").CAT_A30_S_30;
+var CAT_A30_S_20 = require("../../model/ResultSchema").CAT_A30_S_20;
+var CAT_A30_S_10 = require("../../model/ResultSchema").CAT_A30_S_10;
+var CAT_A30_S_1 = require("../../model/ResultSchema").CAT_A30_S_1;
+var CAT_A30_K_30 = require("../../model/ResultSchema").CAT_A30_K_30;
+var CAT_A30_K_20 = require("../../model/ResultSchema").CAT_A30_K_20;
+var CAT_A30_K_10 = require("../../model/ResultSchema").CAT_A30_K_10;
+var CAT_A30_K_1 = require("../../model/ResultSchema").CAT_A30_K_1;
 var CAT_A10_60 = require("../../model/ResultSchema").CAT_A10_60;
 var CAT_A10_40 = require("../../model/ResultSchema").CAT_A10_40;
 var CAT_A10_30 = require("../../model/ResultSchema").CAT_A10_30;
@@ -40,88 +48,88 @@ describe("ResultSchema", function () {
         checkInvalid(result, "A result may only have child categories which are specified in its schema");
     });
 
-    describe("A10 1", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_1);
-
-        it("should not have children", function () {
-            helper.checkOnlyZeroChildrenAreAllowed();
-        });
-
-        it("should have a score between 0 and 10", function () {
-            helper.checkScore(10);
-        });
+    describe(CAT_A10_1, function () {
+        resultWithNoChildrenTestSuite(CAT_A10_1, 10);
     });
 
-    describe("A10 10", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_10);
-
-        it("should consist of 0 or 10 results with category A10 1", function () {
-            helper.setChildCategory(CAT_A10_1);
-            helper.checkZeroChildrenAreAllowed();
-            helper.checkOnlyAmountOfChildrenAreAllowed(10);
-        });
-
-        it("should have a score between 0 and 100", function () {
-            helper.checkScore(100);
-        });
+    describe(CAT_A10_10, function () {
+        combinedResultTestSuite(CAT_A10_10, CAT_A10_1, 10, 100);
     });
 
-    describe("A10 20", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_20);
-
-        it("should consist of 0 or 2 results with category A10 10", function () {
-            helper.setChildCategory(CAT_A10_10);
-            helper.checkZeroChildrenAreAllowed();
-            helper.checkOnlyAmountOfChildrenAreAllowed(2);
-        });
-
-        it("should have a score between 0 and 200", function () {
-            helper.checkScore(200);
-        });
+    describe(CAT_A10_20, function () {
+        combinedResultTestSuite(CAT_A10_20, CAT_A10_10, 2, 200);
     });
 
-    describe("A10 30", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_30);
-
-        it("should consist of 0 or 3 results with category A10 10", function () {
-            helper.setChildCategory(CAT_A10_10);
-            helper.checkZeroChildrenAreAllowed();
-            helper.checkOnlyAmountOfChildrenAreAllowed(3);
-        });
-
-        it("should have a score between 0 and 300", function () {
-            helper.checkScore(300);
-        });
+    describe(CAT_A10_30, function () {
+        combinedResultTestSuite(CAT_A10_30, CAT_A10_10, 3, 300);
     });
 
-    describe("A10 40", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_40);
-
-        it("should consist of 0 or 4 results with category A10 10", function () {
-            helper.setChildCategory(CAT_A10_10);
-            helper.checkZeroChildrenAreAllowed();
-            helper.checkOnlyAmountOfChildrenAreAllowed(4);
-        });
-
-        it("should have a score between 0 and 400", function () {
-            helper.checkScore(400);
-        });
+    describe(CAT_A10_40, function () {
+        combinedResultTestSuite(CAT_A10_40, CAT_A10_10, 4, 400);
     });
 
-    describe("A10 60", function () {
-        var helper = new ResultSchemaTestHelper(CAT_A10_60);
+    describe(CAT_A10_60, function () {
+        combinedResultTestSuite(CAT_A10_60, CAT_A10_10, 6, 600);
+    });
 
-        it("should consist of 0 or 6 results with category A10 10", function () {
-            helper.setChildCategory(CAT_A10_10);
-            helper.checkZeroChildrenAreAllowed();
-            helper.checkOnlyAmountOfChildrenAreAllowed(6);
-        });
+    describe(CAT_A30_K_1, function () {
+        resultWithNoChildrenTestSuite(CAT_A30_K_1, 10);
+    });
 
-        it("should have a score between 0 and 600", function () {
-            helper.checkScore(600);
-        });
+    describe(CAT_A30_K_10, function () {
+        combinedResultTestSuite(CAT_A30_K_10, CAT_A30_K_1, 10, 100);
+    });
+
+    describe(CAT_A30_K_20, function () {
+        combinedResultTestSuite(CAT_A30_K_20, CAT_A30_K_10, 2, 200);
+    });
+
+    describe(CAT_A30_K_30, function () {
+        combinedResultTestSuite(CAT_A30_K_30, CAT_A30_K_10, 3, 300);
+    });
+
+    describe(CAT_A30_S_1, function () {
+        resultWithNoChildrenTestSuite(CAT_A30_S_1, 10);
+    });
+
+    describe(CAT_A30_S_10, function () {
+        combinedResultTestSuite(CAT_A30_S_10, CAT_A30_S_1, 10, 100);
+    });
+
+    describe(CAT_A30_S_20, function () {
+        combinedResultTestSuite(CAT_A30_S_20, CAT_A30_S_10, 2, 200);
+    });
+
+    describe(CAT_A30_S_30, function () {
+        combinedResultTestSuite(CAT_A30_S_30, CAT_A30_S_10, 3, 300);
     });
 });
+
+function resultWithNoChildrenTestSuite(category, maxScore) {
+    var helper = new ResultSchemaTestHelper(category);
+
+    it("should not have children", function () {
+        helper.checkOnlyZeroChildrenAreAllowed();
+    });
+
+    it("should have a score between 0 and " + maxScore, function () {
+        helper.checkScore(maxScore);
+    });
+}
+
+function combinedResultTestSuite(parentCategory, childCategory, allowedChildrenCount, maxScore) {
+    var helper = new ResultSchemaTestHelper(parentCategory);
+
+    it("should consist of 0 or " + allowedChildrenCount + " results with category " + childCategory, function () {
+        helper.setChildCategory(childCategory);
+        helper.checkZeroChildrenAreAllowed();
+        helper.checkOnlyAmountOfChildrenAreAllowed(allowedChildrenCount);
+    });
+
+    it("should have a score between 0 and " + maxScore, function () {
+        helper.checkScore(maxScore);
+    });
+}
 
 function ResultSchemaTestHelper(category) {
     this.category = category;

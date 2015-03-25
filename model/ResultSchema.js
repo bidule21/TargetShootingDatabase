@@ -1,10 +1,22 @@
+var CAT_A30_S_30 = "A30 S 30";
+var CAT_A30_S_20 = "A30 S 20";
+var CAT_A30_S_10 = "A30 S 10";
+var CAT_A30_S_1 = "A30 S 1";
+var CAT_A30_K_30 = "A30 K 30";
+var CAT_A30_K_20 = "A30 K 20";
+var CAT_A30_K_10 = "A30 K 10";
+var CAT_A30_K_1 = "A30 K 1";
 var CAT_A10_60 = "A10 60";
 var CAT_A10_40 = "A10 40";
 var CAT_A10_30 = "A10 30";
 var CAT_A10_20 = "A10 20";
 var CAT_A10_10 = "A10 10";
 var CAT_A10_1 = "A10 1";
-var CAT_ALL = [CAT_A10_1, CAT_A10_10, CAT_A10_20, CAT_A10_30, CAT_A10_40, CAT_A10_60];
+var CAT_ALL = [
+    CAT_A10_1, CAT_A10_10, CAT_A10_20, CAT_A10_30, CAT_A10_40, CAT_A10_60,
+    CAT_A30_K_1, CAT_A30_K_10, CAT_A30_K_20, CAT_A30_K_30,
+    CAT_A30_S_1, CAT_A30_S_10, CAT_A30_S_20, CAT_A30_S_30
+];
 
 var SCHEMAS = [
     {
@@ -42,6 +54,54 @@ var SCHEMAS = [
         allowedChildren: 6,
         allowedChildrenCategory: CAT_A10_10,
         maxScore: 600
+    },
+    {
+        category: CAT_A30_K_1,
+        allowedChildren: 0,
+        allowedChildrenCategory: undefined,
+        maxScore: 10
+    },
+    {
+        category: CAT_A30_K_10,
+        allowedChildren: 10,
+        allowedChildrenCategory: CAT_A30_K_1,
+        maxScore: 100
+    },
+    {
+        category: CAT_A30_K_20,
+        allowedChildren: 2,
+        allowedChildrenCategory: CAT_A30_K_10,
+        maxScore: 200
+    },
+    {
+        category: CAT_A30_K_30,
+        allowedChildren: 3,
+        allowedChildrenCategory: CAT_A30_K_10,
+        maxScore: 300
+    },
+    {
+        category: CAT_A30_S_1,
+        allowedChildren: 0,
+        allowedChildrenCategory: undefined,
+        maxScore: 10
+    },
+    {
+        category: CAT_A30_S_10,
+        allowedChildren: 10,
+        allowedChildrenCategory: CAT_A30_S_1,
+        maxScore: 100
+    },
+    {
+        category: CAT_A30_S_20,
+        allowedChildren: 2,
+        allowedChildrenCategory: CAT_A30_S_10,
+        maxScore: 200
+    },
+    {
+        category: CAT_A30_S_30,
+        allowedChildren: 3,
+        allowedChildrenCategory: CAT_A30_S_10,
+        maxScore: 300
     }
 ];
 
@@ -96,6 +156,14 @@ function containsOtherCategoryThan(category, result) {
 }
 
 exports.ResultSchemaValidator = resultSchemaValidator;
+exports.CAT_A30_S_30 = CAT_A30_S_30;
+exports.CAT_A30_S_20 = CAT_A30_S_20;
+exports.CAT_A30_S_10 = CAT_A30_S_10;
+exports.CAT_A30_S_1 = CAT_A30_S_1;
+exports.CAT_A30_K_30 = CAT_A30_K_30;
+exports.CAT_A30_K_20 = CAT_A30_K_20;
+exports.CAT_A30_K_10 = CAT_A30_K_10;
+exports.CAT_A30_K_1 = CAT_A30_K_1;
 exports.CAT_A10_60 = CAT_A10_60;
 exports.CAT_A10_40 = CAT_A10_40;
 exports.CAT_A10_30 = CAT_A10_30;
