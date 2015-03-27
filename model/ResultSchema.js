@@ -71,6 +71,15 @@ resultSchemaValidator.prototype.isValid = function () {
     if (children.length > 0) {
         if (children.length === this.schema.allowedChildren) {
             childrenValid = !containsOtherCategoryThan(this.schema.allowedChildrenCategory, this.result);
+            
+            // Check every child
+            children.forEach(function(child){
+            		if(childrenValid){
+            		 var validator = new resultSchemaValidator(child);
+            		 childrenValid = validator.isValid();
+            		}
+            	});
+            
         } else {
             childrenValid = false;
         }
@@ -81,7 +90,7 @@ resultSchemaValidator.prototype.isValid = function () {
         this.result.getScore() > this.schema.maxScore) {
         scoreValid = false;
     }
-
+    
     return childrenValid && scoreValid;
 };
 

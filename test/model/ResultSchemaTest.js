@@ -39,6 +39,20 @@ describe("ResultSchema", function () {
 
         checkInvalid(result, "A result may only have child categories which are specified in its schema");
     });
+    
+    it("should check results recursively", function(){
+    	var invalidNestedResult = new Result({
+    		category: CAT_A10_10,
+    		consists_of:[{category:CAT_A10_10}]
+    	});
+    	
+    	var result = new Result({
+    		category:CAT_A10_20,
+    		consists_of:[invalidNestedResult,invalidNestedResult]
+    	});
+    	
+    	checkInvalid(result,"The results contains nested results which are invalid, but they were not detected");
+    });
 
     describe("A10 1", function () {
         var helper = new ResultSchemaTestHelper(CAT_A10_1);
