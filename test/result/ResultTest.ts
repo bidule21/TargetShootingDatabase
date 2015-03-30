@@ -3,6 +3,7 @@
 
 import result = require("../result/Result")
 var expect = require("chai").expect
+
 describe("ResultFactory", () => {
     it("should have a score of 0 by default", () => {
         var res = new result.ResultFactory("sh", "cat").create()
