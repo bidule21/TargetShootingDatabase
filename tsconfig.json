@@ -14,7 +14,9 @@
     ],
     "files": [
         "./result/Result.ts",
-        "./test/ResultTest.ts",
+        "./result/ResultSchema.ts",
+        "./test/result/ResultSchemaTest.ts",
+        "./test/result/ResultTest.ts",
         "./typed/chai.d.ts",
         "./typed/express.d.ts",
         "./typed/mocha.d.ts",
