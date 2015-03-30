@@ -1,4 +1,4 @@
-var Result = require("../../model/Result");
+var Result = require("../../result/Result");
 var ResultSchemaValidator = require("../../model/ResultSchema").ResultSchemaValidator;
 var CAT_A30_S_30 = require("../../model/ResultSchema").CAT_A30_S_30;
 var CAT_A30_S_20 = require("../../model/ResultSchema").CAT_A30_S_20;
@@ -47,18 +47,18 @@ describe("ResultSchema", function () {
 
         checkInvalid(result, "A result may only have child categories which are specified in its schema");
     });
-    
+
     it("should check results recursively", function(){
     	var invalidNestedResult = new Result({
     		category: CAT_A10_10,
     		consists_of:[{category:CAT_A10_10}]
     	});
-    	
+
     	var result = new Result({
     		category:CAT_A10_20,
     		consists_of:[invalidNestedResult,invalidNestedResult]
     	});
-    	
+
     	checkInvalid(result,"The results contains nested results which are invalid, but they were not detected");
     });
 
