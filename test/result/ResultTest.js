@@ -1,6 +1,6 @@
-/// <reference path="../typed/mocha.d.ts" />
-/// <reference path="../typed/chai.d.ts" />
-var result = require("../result/Result");
+/// <reference path="../../typed/mocha.d.ts" />
+/// <reference path="../../typed/chai.d.ts" />
+var result = require("../../result/Result");
 var expect = require("chai").expect;
 describe("ResultFactory", function () {
     it("should have a score of 0 by default", function () {

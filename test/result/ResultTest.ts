@@ -1,7 +1,7 @@
-/// <reference path="../typed/mocha.d.ts" />
-/// <reference path="../typed/chai.d.ts" />
+/// <reference path="../../typed/mocha.d.ts" />
+/// <reference path="../../typed/chai.d.ts" />
 
-import result = require("../result/Result")
+import result = require("../../result/Result")
 var expect = require("chai").expect
 
 describe("ResultFactory", () => {
