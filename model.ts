@@ -1,4 +1,4 @@
-export module Model {
+module model {
     export interface Result {
         category: string
         score: number

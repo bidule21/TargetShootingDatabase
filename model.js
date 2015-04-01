@@ -4,8 +4,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Model;
-(function (Model) {
+var model;
+(function (model) {
     var BaseResultFactory = (function () {
         function BaseResultFactory(shooter, category) {
             this.shooter = shooter;
@@ -50,7 +50,7 @@ var Model;
         };
         return ResultFactory;
     })(BaseResultFactory);
-    Model.ResultFactory = ResultFactory;
+    model.ResultFactory = ResultFactory;
     var NestedResultFactory = (function (_super) {
         __extends(NestedResultFactory, _super);
         function NestedResultFactory(onAddCallback, parentFactory, Categoriesegory) {
@@ -113,7 +113,7 @@ var Model;
         ];
         return Categories;
     })();
-    Model.Categories = Categories;
+    model.Categories = Categories;
     var SCHEMAS = [
         {
             category: Categories.A10_1,
@@ -251,5 +251,5 @@ var Model;
         };
         return ResultSchemaValidator;
     })();
-    Model.ResultSchemaValidator = ResultSchemaValidator;
-})(Model = exports.Model || (exports.Model = {}));
+    model.ResultSchemaValidator = ResultSchemaValidator;
+})(model || (model = {}));
