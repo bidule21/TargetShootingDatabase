@@ -1,94 +1,95 @@
-/// <reference path="../../typed/mocha.d.ts" />
-/// <reference path="../../typed/chai.d.ts" />
+/// <reference path="../../result/Result" />
+/// <reference path="../../result/ResultSchema" />
 
-import res = require("../../result/Result")
-import rsv = require("../../result/ResultSchema")
 var expect = require("chai").expect
+var ResultFactory = Model.ResultFactory
+var CAT = Model.CAT
+var ResultSchemaValidator = Model.ResultSchemaValidator
 
 describe("ResultSchema", function() {
     it("should detect unknown categories", function() {
-        var factory = new res.ResultFactory("Horst", "WTF!")
-        var create = function() { new rsv.ResultSchemaValidator(factory.create()) }
+        var factory = new Model.ResultFactory("Horst", "WTF!")
+        var create = function() { new ResultSchemaValidator(factory.create()) }
         expect(create).to.throw()
     })
 
     it("should have a schema for every category", function() {
-        rsv.CAT.ALL.forEach((category) => {
-            var factory = new res.ResultFactory("Horst", category)
-            new rsv.ResultSchemaValidator(factory.create())
+        Model.CAT.ALL.forEach((category) => {
+            var factory = new Model.ResultFactory("Horst", category)
+            new Model.ResultSchemaValidator(factory.create())
         })
     })
 
     it("should always contain it's specified category", function() {
-        var factory = new res.ResultFactory("Horst", rsv.CAT.A10_20)
-        factory.child(rsv.CAT.A10_1).add()
-        factory.child(rsv.CAT.A10_1).add()
+        var factory = new Model.ResultFactory("Horst", Model.CAT.A10_20)
+        factory.child(Model.CAT.A10_1).add()
+        factory.child(Model.CAT.A10_1).add()
 
         checkInvalid(factory.create(), "A result may only have child categories which are specified in its schema")
     })
 
     it("should check results recursively", function() {
-        var factory = new res.ResultFactory("Horst", rsv.CAT.A10_20)
-        var invalidFactory = factory.child(rsv.CAT.A10_10)
-        invalidFactory.child(rsv.CAT.A10_10).add()
+        var factory = new Model.ResultFactory("Horst", Model.CAT.A10_20)
+        var invalidFactory = factory.child(Model.CAT.A10_10)
+        invalidFactory.child(Model.CAT.A10_10).add()
         invalidFactory.add()
         checkInvalid(factory.create(), "The results contains nested results which are invalid, but they were not detected")
     })
 
-    describe(rsv.CAT.A10_1, function() {
-        resultWithNoChildrenTestSuite(rsv.CAT.A10_1, 10)
+    describe(Model.CAT.A10_1, function() {
+        resultWithNoChildrenTestSuite(Model.CAT.A10_1, 10)
     })
 
-    describe(rsv.CAT.A10_10, function() {
-        combinedResultTestSuite(rsv.CAT.A10_10, rsv.CAT.A10_1, 10, 100)
+    describe(Model.CAT.A10_10, function() {
+        combinedResultTestSuite(Model.CAT.A10_10, Model.CAT.A10_1, 10, 100)
     })
 
-    describe(rsv.CAT.A10_20, function() {
-        combinedResultTestSuite(rsv.CAT.A10_20, rsv.CAT.A10_10, 2, 200)
+    describe(Model.CAT.A10_20, function() {
+        combinedResultTestSuite(Model.CAT.A10_20, Model.CAT.A10_10, 2, 200)
     })
 
-    describe(rsv.CAT.A10_30, function() {
-        combinedResultTestSuite(rsv.CAT.A10_30, rsv.CAT.A10_10, 3, 300)
+    describe(Model.CAT.A10_30, function() {
+        combinedResultTestSuite(Model.CAT.A10_30, Model.CAT.A10_10, 3, 300)
     })
 
-    describe(rsv.CAT.A10_40, function() {
-        combinedResultTestSuite(rsv.CAT.A10_40, rsv.CAT.A10_10, 4, 400)
+    describe(Model.CAT.A10_40, function() {
+        combinedResultTestSuite(Model.CAT.A10_40, Model.CAT.A10_10, 4, 400)
     })
 
-    describe(rsv.CAT.A10_60, function() {
-        combinedResultTestSuite(rsv.CAT.A10_60, rsv.CAT.A10_10, 6, 600)
+    describe(Model.CAT.A10_60, function() {
+        combinedResultTestSuite(Model.CAT.A10_60, Model.CAT.A10_10, 6, 600)
     })
 
-    describe(rsv.CAT.A30_K_1, function() {
-        resultWithNoChildrenTestSuite(rsv.CAT.A30_K_1, 10)
+    describe(Model.CAT.A30_K_1, function() {
+        resultWithNoChildrenTestSuite(Model.CAT.A30_K_1, 10)
     })
 
-    describe(rsv.CAT.A30_K_10, function() {
-        combinedResultTestSuite(rsv.CAT.A30_K_10, rsv.CAT.A30_K_1, 10, 100)
+    describe(Model.CAT.A30_K_10, function() {
+        combinedResultTestSuite(Model.CAT.A30_K_10, Model.CAT.A30_K_1, 10, 100)
     })
 
-    describe(rsv.CAT.A30_K_20, function() {
-        combinedResultTestSuite(rsv.CAT.A30_K_20, rsv.CAT.A30_K_10, 2, 200)
+    describe(Model.CAT.A30_K_20, function() {
+        combinedResultTestSuite(Model.CAT.A30_K_20, Model.CAT.A30_K_10, 2, 200)
     })
 
-    describe(rsv.CAT.A30_K_30, function() {
-        combinedResultTestSuite(rsv.CAT.A30_K_30, rsv.CAT.A30_K_10, 3, 300)
+    describe(Model.CAT.A30_K_30, function() {
+        combinedResultTestSuite(Model.CAT.A30_K_30, Model.CAT.A30_K_10, 3, 300)
     })
 
-    describe(rsv.CAT.A30_S_1, function() {
-        resultWithNoChildrenTestSuite(rsv.CAT.A30_S_1, 10)
+    describe(Model.CAT.A30_S_1, function() {
+        resultWithNoChildrenTestSuite(Model.CAT.A30_S_1, 10)
     })
 
-    describe(rsv.CAT.A30_S_10, function() {
-        combinedResultTestSuite(rsv.CAT.A30_S_10, rsv.CAT.A30_S_1, 10, 100)
+    describe(Model.CAT.A30_S_10, function() {
+        combinedResultTestSuite(Model.CAT.A30_S_10, Model.CAT.A30_S_1, 10, 100)
     })
 
-    describe(rsv.CAT.A30_S_20, function() {
-        combinedResultTestSuite(rsv.CAT.A30_S_20, rsv.CAT.A30_S_10, 2, 200)
+    describe(Model.CAT.A30_S_20, function() {
+        combinedResultTestSuite(Model.CAT.A30_S_20, Model.CAT.A30_S_10, 2, 200)
     })
 
-    describe(rsv.CAT.A30_S_30, function() {
-        combinedResultTestSuite(rsv.CAT.A30_S_30, rsv.CAT.A30_S_10, 3, 300)
+    describe(Model.CAT.A30_S_30, function() {
+        combinedResultTestSuite(Model.CAT.A30_S_30, Model.CAT.A30_S_10, 3, 300)
     })
 })
 
@@ -115,7 +116,7 @@ function combinedResultTestSuite(parentCategory, childCategory, allowedChildrenC
 }
 
 function checkScore(category:string,maximum:number){
-  var factory = new res.ResultFactory("horst", category)
+  var factory = new Model.ResultFactory("horst", category)
 
   var resultWithMinimumScore = factory.setScore(0).create()
   var resultWithMaximumScore = factory.setScore(maximum).create()
@@ -185,7 +186,7 @@ function checkZeroChildrenAreAllowed(category:string) {
 }
 
 function makeParentWithChildren(parentCategory, childrenCategories) {
-    var factory = new res.ResultFactory("Horst", parentCategory)
+    var factory = new Model.ResultFactory("Horst", parentCategory)
     childrenCategories.forEach((category) => {
         factory.child(category).add()
     })
@@ -193,11 +194,11 @@ function makeParentWithChildren(parentCategory, childrenCategories) {
 }
 
 function checkValid(result, message) {
-    var validator = new rsv.ResultSchemaValidator(result)
+    var validator = new Model.ResultSchemaValidator(result)
     expect(validator.isValid()).to.be.true
 }
 
 function checkInvalid(result, message) {
-    var validator = new rsv.ResultSchemaValidator(result)
+    var validator = new Model.ResultSchemaValidator(result)
     expect(validator.isValid()).to.be.false
 }

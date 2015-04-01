@@ -1,17 +1,17 @@
-/// <reference path="../../typed/mocha.d.ts" />
-/// <reference path="../../typed/chai.d.ts" />
-
-import result = require("../../result/Result")
+/// <reference path="../../result/Result" />
 var expect = require("chai").expect
 
+var ResultFactory = Model.ResultFactory
+
 describe("ResultFactory", () => {
+
     it("should have a score of 0 by default", () => {
-        var res = new result.ResultFactory("sh", "cat").create()
+        var res = new  ResultFactory("sh", "cat").create()
         expect(res).to.have.property("score", 0)
     })
 
     describe("Result with no children", () => {
-        var factory = new result.ResultFactory("sh", "cat")
+        var factory = new  ResultFactory("sh", "cat")
         factory.setScore(591)
         var res = factory.create()
 
@@ -33,7 +33,7 @@ describe("ResultFactory", () => {
     })
 
     describe("Child tree with height 1", () => {
-        var factory = new result.ResultFactory("sh", "match")
+        var factory = new  ResultFactory("sh", "match")
         var kneelingFactory = factory.child("kneeling", 290).add()
         var standingFactory = factory.child("standing", 280).add()
 
@@ -87,7 +87,7 @@ describe("ResultFactory", () => {
     })
 
     describe("Child tree with height 2", () => {
-        var factory = new result.ResultFactory("sh", "cat1")
+        var factory = new  ResultFactory("sh", "cat1")
 
         var factory_c11 = factory.child("cat1.1")
         factory_c11.child("cat1.1.1", 80).add()
