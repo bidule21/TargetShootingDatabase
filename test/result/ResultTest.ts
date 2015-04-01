@@ -1,7 +1,7 @@
-/// <reference path="../../result/Result" />
 var expect = require("chai").expect
 
-var ResultFactory = Model.ResultFactory
+import ModelModule = require("../../model");
+var ResultFactory = ModelModule.Model.ResultFactory
 
 describe("ResultFactory", () => {
 

@@ -13,7 +13,7 @@
         "!./node_modules/**/*.ts"
     ],
     "files": [
-        "./result/Result.ts",
+        "./model.ts",
         "./result/ResultSchema.ts",
         "./test/result/ResultSchemaTest.ts",
         "./test/result/ResultTest.ts",

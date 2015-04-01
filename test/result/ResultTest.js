@@ -1,6 +1,6 @@
-/// <reference path="../../result/Result" />
 var expect = require("chai").expect;
-var ResultFactory = Model.ResultFactory;
+var ModelModule = require("../../model");
+var ResultFactory = ModelModule.Model.ResultFactory;
 describe("ResultFactory", function () {
     it("should have a score of 0 by default", function () {
         var res = new ResultFactory("sh", "cat").create();
