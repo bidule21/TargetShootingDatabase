@@ -14,7 +14,6 @@
     ],
     "files": [
         "./model.ts",
-        "./result/ResultSchema.ts",
         "./test/result/ResultSchemaTest.ts",
         "./test/result/ResultTest.ts",
         "./typed/chai.d.ts",
