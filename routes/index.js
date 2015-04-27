@@ -1,4 +1,4 @@
-/// <reference path="../typed/express.d.ts"/>
+/// <reference path="../typings/express.d.ts"/>
 var express = require('express');
 var router = express.Router();
 /* GET home page. */

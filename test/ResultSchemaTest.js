@@ -1,6 +1,6 @@
 /// <reference path="../model/Result.ts"/>
-/// <reference path="../typed/mocha.d.ts"/>
-/// <reference path="../typed/chai.d.ts"/>
+/// <reference path="../typings/mocha.d.ts"/>
+/// <reference path="../typings/chai.d.ts"/>
 var chai = require("chai");
 var validator = require("../model/ResultSchemaValidator");
 var Categories = require("../model/Categories");
