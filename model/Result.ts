@@ -1,3 +1,6 @@
+/**
+ * Created by jonashansen on 27/04/15.
+ */
 import categories = require("./Categories");
 export interface Result {
     category: string

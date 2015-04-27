@@ -4,6 +4,9 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/**
+ * Created by jonashansen on 27/04/15.
+ */
 var categories = require("./Categories");
 var BaseResultFactory = (function () {
     function BaseResultFactory(shooter, category) {
@@ -215,4 +218,4 @@ var ResultSchemas = [
         maxScore: 300
     }
 ];
-//# sourceMappingURL=Result.js.map
+//# sourceMappingURL=result.js.map

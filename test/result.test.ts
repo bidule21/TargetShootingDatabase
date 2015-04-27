@@ -1,9 +1,9 @@
-/// <reference path="../model/Result.ts"/>
+/// <reference path="../model/result.ts"/>
 /// <reference path="../typings/mocha.d.ts"/>
 /// <reference path="../typings/chai.d.ts"/>
 
 import chai = require("chai");
-import result = require("../model/Result");
+import result = require("../model/result");
 import Categories = require("../model/Categories");
 
 var ResultSchemaValidator = result.ResultSchemaValidator;

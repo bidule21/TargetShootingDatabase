@@ -1,8 +1,8 @@
-/// <reference path="../model/Result.ts"/>
+/// <reference path="../model/result.ts"/>
 /// <reference path="../typings/mocha.d.ts"/>
 /// <reference path="../typings/chai.d.ts"/>
 var chai = require("chai");
-var result = require("../model/Result");
+var result = require("../model/result");
 var Categories = require("../model/Categories");
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
@@ -286,4 +286,4 @@ describe("Result", function () {
         }
     });
 });
-//# sourceMappingURL=ResultTest.js.map
+//# sourceMappingURL=result.test.js.map
