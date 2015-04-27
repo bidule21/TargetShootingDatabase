@@ -3,12 +3,11 @@
 /// <reference path="../typings/chai.d.ts"/>
 
 import chai = require("chai");
-import validator = require("../model/ResultSchemaValidator");
 import Categories = require("../model/Categories");
 import result = require("../model/Result");
 
 var expect = chai.expect;
-var ResultSchemaValidator = validator.ResultSchemaValidator;
+var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 
 describe("ResultSchema", function() {

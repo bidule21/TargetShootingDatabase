@@ -2,11 +2,10 @@
 /// <reference path="../typings/mocha.d.ts"/>
 /// <reference path="../typings/chai.d.ts"/>
 var chai = require("chai");
-var validator = require("../model/ResultSchemaValidator");
 var Categories = require("../model/Categories");
 var result = require("../model/Result");
 var expect = chai.expect;
-var ResultSchemaValidator = validator.ResultSchemaValidator;
+var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 describe("ResultSchema", function () {
     it("should detect unknown categories", function () {
