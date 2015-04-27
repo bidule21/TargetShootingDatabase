@@ -10,21 +10,23 @@ var expect = chai.expect;
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 
-describe("ResultSchema", function() {
-    it("should detect unknown categories", function() {
+describe("ResultSchema", function () {
+    it("should detect unknown categories", function () {
         var factory = new result.ResultFactory("Horst", "WTF!");
-        var create = function() { new ResultSchemaValidator(factory.create()) };
+        var create = function () {
+            new ResultSchemaValidator(factory.create())
+        };
         expect(create).to.throw()
     });
 
-    it("should have a schema for every category", function() {
+    it("should have a schema for every category", function () {
         Categories.ALL.forEach((category) => {
             var factory = new ResultFactory("Horst", category);
             new ResultSchemaValidator(factory.create())
         })
     });
 
-    it("should always contain it's specified category", function() {
+    it("should always contain it's specified category", function () {
         var factory = new ResultFactory("Horst", Categories.A10_20);
         factory.child(Categories.A10_1).add();
         factory.child(Categories.A10_1).add();
@@ -32,7 +34,7 @@ describe("ResultSchema", function() {
         checkInvalid(factory.create(), "A result may only have child schema.Categories which are specified in its schema")
     });
 
-    it("should check results recursively", function() {
+    it("should check results recursively", function () {
         var factory = new ResultFactory("Horst", Categories.A10_20);
         var invalidFactory = factory.child(Categories.A10_10);
         invalidFactory.child(Categories.A10_10).add();
@@ -40,86 +42,86 @@ describe("ResultSchema", function() {
         checkInvalid(factory.create(), "The results contains nested results which are invalid, but they were not detected")
     });
 
-    describe(Categories.A10_1, function() {
+    describe(Categories.A10_1, function () {
         resultWithNoChildrenTestSuite(Categories.A10_1, 10)
     });
 
-    describe(Categories.A10_10, function() {
+    describe(Categories.A10_10, function () {
         combinedResultTestSuite(Categories.A10_10, Categories.A10_1, 10, 100)
     });
 
-    describe(Categories.A10_20, function() {
+    describe(Categories.A10_20, function () {
         combinedResultTestSuite(Categories.A10_20, Categories.A10_10, 2, 200)
     });
 
-    describe(Categories.A10_30, function() {
+    describe(Categories.A10_30, function () {
         combinedResultTestSuite(Categories.A10_30, Categories.A10_10, 3, 300)
     });
 
-    describe(Categories.A10_40, function() {
+    describe(Categories.A10_40, function () {
         combinedResultTestSuite(Categories.A10_40, Categories.A10_10, 4, 400)
     });
 
-    describe(Categories.A10_60, function() {
+    describe(Categories.A10_60, function () {
         combinedResultTestSuite(Categories.A10_60, Categories.A10_10, 6, 600)
     });
 
-    describe(Categories.A30_K_1, function() {
+    describe(Categories.A30_K_1, function () {
         resultWithNoChildrenTestSuite(Categories.A30_K_1, 10)
     });
 
-    describe(Categories.A30_K_10, function() {
+    describe(Categories.A30_K_10, function () {
         combinedResultTestSuite(Categories.A30_K_10, Categories.A30_K_1, 10, 100)
     });
 
-    describe(Categories.A30_K_20, function() {
+    describe(Categories.A30_K_20, function () {
         combinedResultTestSuite(Categories.A30_K_20, Categories.A30_K_10, 2, 200)
     });
 
-    describe(Categories.A30_K_30, function() {
+    describe(Categories.A30_K_30, function () {
         combinedResultTestSuite(Categories.A30_K_30, Categories.A30_K_10, 3, 300)
     });
 
-    describe(Categories.A30_S_1, function() {
+    describe(Categories.A30_S_1, function () {
         resultWithNoChildrenTestSuite(Categories.A30_S_1, 10)
     });
 
-    describe(Categories.A30_S_10, function() {
+    describe(Categories.A30_S_10, function () {
         combinedResultTestSuite(Categories.A30_S_10, Categories.A30_S_1, 10, 100)
     });
 
-    describe(Categories.A30_S_20, function() {
+    describe(Categories.A30_S_20, function () {
         combinedResultTestSuite(Categories.A30_S_20, Categories.A30_S_10, 2, 200)
     });
 
-    describe(Categories.A30_S_30, function() {
+    describe(Categories.A30_S_30, function () {
         combinedResultTestSuite(Categories.A30_S_30, Categories.A30_S_10, 3, 300)
     })
 });
 
 
 function resultWithNoChildrenTestSuite(category, maxScore) {
-    it("should not have children", function() {
+    it("should not have children", function () {
         checkOnlyZeroChildrenAreAllowed(category)
     });
 
-    it("should have a score between 0 and " + maxScore, function() {
+    it("should have a score between 0 and " + maxScore, function () {
         checkScore(category, maxScore)
     })
 }
 
 function combinedResultTestSuite(parentCategory, childCategory, allowedChildrenCount, maxScore) {
-    it("should consist of 0 or " + allowedChildrenCount + " results with category " + childCategory, function() {
+    it("should consist of 0 or " + allowedChildrenCount + " results with category " + childCategory, function () {
         checkZeroChildrenAreAllowed(parentCategory);
         checkOnlyAmountOfChildrenAreAllowed(parentCategory, childCategory, allowedChildrenCount)
     });
 
-    it("should have a score between 0 and " + maxScore, function() {
+    it("should have a score between 0 and " + maxScore, function () {
         checkScore(parentCategory, maxScore)
     })
 }
 
-function checkScore(category: string, maximum: number) {
+function checkScore(category:string, maximum:number) {
     var factory = new ResultFactory("horst", category);
 
     var resultWithMinimumScore = factory.setScore(0).create();
@@ -140,7 +142,7 @@ function checkScore(category: string, maximum: number) {
         category + " should not allow results whose scores are bigger than " + maximum)
 }
 
-function checkOnlyZeroChildrenAreAllowed(category: string) {
+function checkOnlyZeroChildrenAreAllowed(category:string) {
     var resultWithZeroChildren = makeParentWithChildren(category, []);
     var resultWithMultipleChildren = makeParentWithChildren(category, [{}]);
 
@@ -150,7 +152,7 @@ function checkOnlyZeroChildrenAreAllowed(category: string) {
         "Not more than 0 children are allowed for category " + category)
 }
 
-function checkOnlyAmountOfChildrenAreAllowed(category: string, childCategory: string, legalAmountOfChildren: number) {
+function checkOnlyAmountOfChildrenAreAllowed(category:string, childCategory:string, legalAmountOfChildren:number) {
     var insufficientAmount = legalAmountOfChildren - 1;
     var overflowAmount = legalAmountOfChildren + 1;
 
@@ -182,7 +184,7 @@ function checkOnlyAmountOfChildrenAreAllowed(category: string, childCategory: st
     }
 }
 
-function checkZeroChildrenAreAllowed(category: string) {
+function checkZeroChildrenAreAllowed(category:string) {
     var resultWithZeroChildren = makeParentWithChildren(category, []);
 
     checkValid(resultWithZeroChildren,
