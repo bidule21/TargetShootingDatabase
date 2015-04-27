@@ -1,4 +1,6 @@
 var Shooter = require("../../model/Shooter");
+var chai  = require("chai");
+chai.should();
 
 describe("Shooter",function(){
     
