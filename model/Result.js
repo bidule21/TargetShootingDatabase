@@ -7,7 +7,7 @@ var __extends = this.__extends || function (d, b) {
 /**
  * Created by jonashansen on 27/04/15.
  */
-var categories = require("./Categories");
+var categories = require("categories");
 var BaseResultFactory = (function () {
     function BaseResultFactory(shooter, category) {
         this.shooter = shooter;

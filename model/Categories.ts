@@ -2,7 +2,6 @@
  * Created by jonashansen on 27/04/15.
  */
 
-
 export var A30_S_30 = "A30 S 30";
 export var A30_S_20 = "A30 S 20";
 export var A30_S_10 = "A30 S 10";

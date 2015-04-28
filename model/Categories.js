@@ -31,4 +31,4 @@ exports.ALL = [
     exports.A30_S_20,
     exports.A30_S_30
 ];
-//# sourceMappingURL=Categories.js.map
+//# sourceMappingURL=categories.js.map

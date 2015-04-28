@@ -1,7 +1,7 @@
 /**
  * Created by jonashansen on 27/04/15.
  */
-import categories = require("./Categories");
+import categories = require("categories");
 export interface Result {
     category: string
     score: number
