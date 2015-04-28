@@ -4,7 +4,7 @@
 
 import chai = require("chai");
 import result = require("../model/result");
-import Categories = require("../model/Categories");
+import Categories = require("../model/categories");
 
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;

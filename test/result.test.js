@@ -3,7 +3,7 @@
 /// <reference path="../typings/chai.d.ts"/>
 var chai = require("chai");
 var result = require("../model/result");
-var Categories = require("../model/Categories");
+var Categories = require("../model/categories");
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 var expect = chai.expect;
