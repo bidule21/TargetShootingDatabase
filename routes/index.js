@@ -2,7 +2,9 @@
 var express = require("express");
 var gateways = require("./gateways");
 var router = express.Router();
-router.use(gateways.GetGateway);
+// TODO: move to app.js
+router.use(gateways.DefaultGateways.DefaultGetGateway);
+router.use(gateways.DefaultGateways.DefaultPutGateway);
 /* GET home page. */
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Target Shooting Database", environment: process.env.SYSTEM_ENVIRONMENT });
