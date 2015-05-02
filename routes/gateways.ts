@@ -13,17 +13,23 @@ interface Gateway {
 
 export class GetGateway implements Gateway {
     handleRequest(req:express.Request, res:express.Response, next:Function) {
-        console.log("Request from " + req.host + " passed the gates");
-        next();
+        if(req.method==="GET") {
+            console.log("GET request from " + req.host + " passed the gates");
+            next();
+        }
     }
 }
 
 export class PutGateway implements Gateway {
     handleRequest(req:express.Request, res:express.Response, next:Function) {
-        console.log("Request from " + req.host + " passed the gates");
+        if(req.method==="PUT") {
+            console.log("PUT request from " + req.host + " passed the gates");
 
-        res.status(400);
-        res.send(ERR_NO_API_KEY);
+            res.status(400);
+            res.send(ERR_NO_API_KEY);
+        }else{
+            next();
+        }
     }
 }
 

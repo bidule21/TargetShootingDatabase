@@ -6,8 +6,10 @@ var GetGateway = (function () {
     function GetGateway() {
     }
     GetGateway.prototype.handleRequest = function (req, res, next) {
-        console.log("Request from " + req.host + " passed the gates");
-        next();
+        if (req.method === "GET") {
+            console.log("GET request from " + req.host + " passed the gates");
+            next();
+        }
     };
     return GetGateway;
 })();
@@ -16,9 +18,14 @@ var PutGateway = (function () {
     function PutGateway() {
     }
     PutGateway.prototype.handleRequest = function (req, res, next) {
-        console.log("Request from " + req.host + " passed the gates");
-        res.status(400);
-        res.send(exports.ERR_NO_API_KEY);
+        if (req.method === "PUT") {
+            console.log("PUT request from " + req.host + " passed the gates");
+            res.status(400);
+            res.send(exports.ERR_NO_API_KEY);
+        }
+        else {
+            next();
+        }
     };
     return PutGateway;
 })();
