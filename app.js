@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var gateways = require("./routes/gateways");
+var gateways = require('./routes/gateways');
 
 var app = express();
 
@@ -22,8 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(gateways.DefaultGateways.DefaultGetGateway.handleRequest);
-app.use(gateways.DefaultGateways.DefaultPutGateway.handleRequest);
+
+app.use(gateways.handleGetRequest);
+app.use(gateways.handlePutRequest);
 
 app.use('/', routes);
 app.use('/users', users);

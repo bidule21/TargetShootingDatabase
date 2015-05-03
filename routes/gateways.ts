@@ -3,9 +3,12 @@
  */
 
 /// <reference path="../typings/express.d.ts" />
+
 import express = require("express");
+import keys = require("./keys");
 
 export var ERR_NO_API_KEY = "ERR: NO_APY_KEY";
+export var ERR_INVALID_API_KEY = "ERR: INVALID_API_KEY";
 
 interface Gateway {
     handleRequest(req:express.Request, res:express.Response, next:Function);
@@ -13,27 +16,53 @@ interface Gateway {
 
 export class GetGateway implements Gateway {
     handleRequest(req:express.Request, res:express.Response, next:Function) {
-        if(req.method==="GET") {
-            console.log("GET request from " + req.host + " passed the gates");
-            next();
-        }
+        console.log("GET request from " + req.host + " passed the gates");
+        next();
     }
 }
+
 
 export class PutGateway implements Gateway {
-    handleRequest(req:express.Request, res:express.Response, next:Function) {
-        if(req.method==="PUT") {
-            console.log("PUT request from " + req.host + " passed the gates");
 
+    private keyChecker:keys.KeyChecker;
+
+    constructor(keyChecker:keys.KeyChecker) {
+        this.keyChecker = keyChecker;
+    }
+
+    handleRequest(req:express.Request, res:express.Response, next:Function):any {
+        if (!req.body.API_KEY) {
             res.status(400);
             res.send(ERR_NO_API_KEY);
-        }else{
-            next();
+        } else {
+            var apiKey = req.body.API_KEY;
+            console.log(this.keyChecker);
+            if (!this.keyChecker.check(apiKey)) {
+                res.status(401);
+                res.send(ERR_INVALID_API_KEY);
+            } else {
+                next();
+                console.log("PUT request from " + req.host + " passed the gates");
+            }
         }
     }
 }
 
-export class DefaultGateways {
-    static DefaultPutGateway:Gateway = new PutGateway();
-    static DefaultGetGateway:Gateway = new GetGateway();
+export function handleGetRequest(req:express.Request, res:express.Response, next:Function):any {
+    if (req.method === "GET") {
+        var gateway = new GetGateway();
+        gateway.handleRequest(req, res, next);
+    } else {
+        next();
+    }
+}
+
+export function handlePutRequest(req:express.Request, res:express.Response, next:Function):any {
+    if (req.method === "PUT") {
+        var keyChecker = new keys.DefaultKeyChecker();
+        var gateway = new PutGateway(keyChecker);
+        gateway.handleRequest(req, res, next);
+    } else {
+        next();
+    }
 }
