@@ -33,7 +33,7 @@ describe("PutGateway", function () {
     });
     describe("API key", function () {
         it("should contain a key", function () {
-            req.body.API_KEY = undefined;
+            req.body.api_key = undefined;
             var gateway = new gateways.PutGateway(null);
             gateway.handleRequest(req, res, nextSpy);
             sinon.assert.notCalled(nextSpy);
@@ -42,7 +42,7 @@ describe("PutGateway", function () {
         });
         it("should invoke the key-checking engine and route to the next handler", function () {
             var key = "MyKey";
-            req.body.API_KEY = key;
+            req.body.api_key = key;
             var keyCheckStub = sinon.stub().returns(true);
             var keyChecker = { check: keyCheckStub };
             var gateway = new gateways.PutGateway(keyChecker);
@@ -53,7 +53,7 @@ describe("PutGateway", function () {
         });
         it("should throw an error when the key isn't correct", function () {
             var key = "MyKey";
-            req.body.API_KEY = key;
+            req.body.api_key = key;
             var keyCheckStub = sinon.stub().returns(false);
             var keyChecker = { check: keyCheckStub };
             var gateway = new gateways.PutGateway(keyChecker);

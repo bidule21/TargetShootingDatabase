@@ -19,12 +19,12 @@ var PutGateway = (function () {
         this.keyChecker = keyChecker;
     }
     PutGateway.prototype.handleRequest = function (req, res, next) {
-        if (!req.body.API_KEY) {
+        if (!req.body.api_key) {
             res.status(400);
             res.send(exports.ERR_NO_API_KEY);
         }
         else {
-            var apiKey = req.body.API_KEY;
+            var apiKey = req.body.api_key;
             console.log(this.keyChecker);
             if (!this.keyChecker.check(apiKey)) {
                 res.status(401);
