@@ -1,6 +1,4 @@
-/// <reference path="../model/result.ts"/>
-/// <reference path="../typings/mocha.d.ts"/>
-/// <reference path="../typings/chai.d.ts"/>
+/// <reference path="../typings/test.d.ts"/>
 
 import chai = require("chai");
 import result = require("../model/result");

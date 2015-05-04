@@ -1,10 +1,7 @@
 /**
  * Created by jonashansen on 29/04/15.
  */
-/// <reference path="../model/result.ts"/>
-/// <reference path="../typings/mocha.d.ts"/>
-/// <reference path="../typings/chai.d.ts"/>
-/// <reference path="../typings/sinon.d.ts"/>
+/// <reference path="../typings/test.d.ts"/>
 var sinon = require("sinon");
 var gateways = require("../routes/gateways");
 describe("GetGateway", function () {

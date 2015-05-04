@@ -1,6 +1,4 @@
-/// <reference path="../model/result.ts"/>
-/// <reference path="../typings/mocha.d.ts"/>
-/// <reference path="../typings/chai.d.ts"/>
+/// <reference path="../typings/test.d.ts"/>
 var chai = require("chai");
 var result = require("../model/result");
 var Categories = require("../model/categories");
