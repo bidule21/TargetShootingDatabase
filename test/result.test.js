@@ -29,8 +29,8 @@ describe("Result", function () {
     });
     describe("Child tree with height 1", function () {
         var factory = new ResultFactory("sh", "match");
-        var kneelingFactory = factory.child("kneeling", 290).add();
-        var standingFactory = factory.child("standing", 280).add();
+        factory.child("kneeling", 290).add();
+        factory.child("standing", 280).add();
         var res = factory.create();
         it("should have a shooter", function () {
             expect(res).to.have.property("shooter", "sh");

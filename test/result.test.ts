@@ -39,8 +39,8 @@ describe("Result", () => {
 
     describe("Child tree with height 1", () => {
         var factory = new ResultFactory("sh", "match");
-        var kneelingFactory = factory.child("kneeling", 290).add();
-        var standingFactory = factory.child("standing", 280).add();
+        factory.child("kneeling", 290).add();
+        factory.child("standing", 280).add();
 
         var res = factory.create();
 
@@ -175,7 +175,7 @@ describe("Result", () => {
                 })
             })
         })
-    })
+    });
 
     describe("Schemas", () => {
         it("should detect unknown categories", () => {
