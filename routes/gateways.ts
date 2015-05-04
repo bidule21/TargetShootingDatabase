@@ -21,7 +21,6 @@ export class GetGateway implements Gateway {
     }
 }
 
-
 export class PutGateway implements Gateway {
 
     private keyChecker:keys.KeyChecker;
