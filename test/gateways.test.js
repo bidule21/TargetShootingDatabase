@@ -16,14 +16,12 @@ describe("PutGateway", function () {
     var nextSpy;
     var statusSpy;
     var sendSpy;
-    var requestVariablesHelper;
     var req;
     var res;
     beforeEach(function () {
         nextSpy = sinon.spy();
         statusSpy = sinon.spy();
         sendSpy = sinon.spy();
-        requestVariablesHelper = {};
         req = {
             host: "someone",
             body: {}

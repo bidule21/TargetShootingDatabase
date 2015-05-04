@@ -24,7 +24,6 @@ describe("PutGateway", () => {
     var nextSpy;
     var statusSpy;
     var sendSpy;
-    var requestVariablesHelper: {[key:string]:string;};
     var req;
     var res;
 
@@ -32,7 +31,6 @@ describe("PutGateway", () => {
         nextSpy = sinon.spy();
         statusSpy = sinon.spy();
         sendSpy = sinon.spy();
-        requestVariablesHelper={};
         req = {
             host:"someone",
             body:{}
@@ -73,7 +71,7 @@ describe("PutGateway", () => {
 
         it("should throw an error when the key isn't correct", () => {
             var key = "MyKey";
-            req.body.API_KEY=key
+            req.body.API_KEY=key;
 
             var keyCheckStub = sinon.stub().returns(false);
             var keyChecker:keys.KeyChecker = {check:keyCheckStub};
