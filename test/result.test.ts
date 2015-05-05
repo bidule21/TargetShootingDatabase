@@ -4,7 +4,7 @@ import chai = require("chai");
 import result = require("../model/result");
 import categories = require("../model/categories");
 
-var ResultSchemaValidator = result.ResultSchemaValidator;
+var ResultSchemaValidator = result.ResultValidator;
 var ResultFactory = result.ResultFactory;
 var expect = chai.expect;
 
@@ -356,13 +356,13 @@ describe("Result", () => {
         }
 
         function checkValid(result, message) {
-            var validator = new ResultSchemaValidator(result);
-            expect(validator.isValid()).to.be.true
+            var validator = new ResultSchemaValidator();
+            expect(validator.isValid(result)).to.be.true
         }
 
         function checkInvalid(result, message) {
-            var validator = new ResultSchemaValidator(result);
-            expect(validator.isValid()).to.be.false
+            var validator = new ResultSchemaValidator();
+            expect(validator.isValid(result)).to.be.false
         }
 
     });

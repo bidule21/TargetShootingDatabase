@@ -86,21 +86,18 @@ class ResultHelper implements Result {
     }
 }
 
-export class ResultSchemaValidator {
-
-    constructor(public result:Result) {
-    }
-
-    public isValid():boolean {
-        var children = this.result.children;
+export class ResultValidator {
+    public isValid(result:Result):boolean {
+        var children = result.children;
         var childrenValid = true;
         if (children.length > 0) {
-            if (children.length === this.result.category.allowedChildren) {
-                childrenValid = !containsOtherCategoryThan(this.result.category.allowedChildrenCategory, this.result);
-                children.forEach(function (child) {
+            if (children.length === result.category.allowedChildren) {
+                childrenValid = !containsOtherCategoryThan(result.category.allowedChildrenCategory, result);
+
+                var validator=this;
+                children.forEach((child) => {
                     if (childrenValid) {
-                        var validator = new ResultSchemaValidator(child);
-                        childrenValid = validator.isValid();
+                        childrenValid = validator.isValid(child);
                     }
                 });
             }
@@ -109,7 +106,7 @@ export class ResultSchemaValidator {
             }
         }
         var scoreValid = true;
-        if (this.result.score < 0 || this.result.score > this.result.category.maxScore) {
+        if (result.score < 0 || result.score > result.category.maxScore) {
             scoreValid = false;
         }
         return childrenValid && scoreValid;

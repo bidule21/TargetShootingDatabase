@@ -81,20 +81,19 @@ var ResultHelper = (function () {
     });
     return ResultHelper;
 })();
-var ResultSchemaValidator = (function () {
-    function ResultSchemaValidator(result) {
-        this.result = result;
+var ResultValidator = (function () {
+    function ResultValidator() {
     }
-    ResultSchemaValidator.prototype.isValid = function () {
-        var children = this.result.children;
+    ResultValidator.prototype.isValid = function (result) {
+        var children = result.children;
         var childrenValid = true;
         if (children.length > 0) {
-            if (children.length === this.result.category.allowedChildren) {
-                childrenValid = !containsOtherCategoryThan(this.result.category.allowedChildrenCategory, this.result);
+            if (children.length === result.category.allowedChildren) {
+                childrenValid = !containsOtherCategoryThan(result.category.allowedChildrenCategory, result);
+                var validator = this;
                 children.forEach(function (child) {
                     if (childrenValid) {
-                        var validator = new ResultSchemaValidator(child);
-                        childrenValid = validator.isValid();
+                        childrenValid = validator.isValid(child);
                     }
                 });
             }
@@ -103,7 +102,7 @@ var ResultSchemaValidator = (function () {
             }
         }
         var scoreValid = true;
-        if (this.result.score < 0 || this.result.score > this.result.category.maxScore) {
+        if (result.score < 0 || result.score > result.category.maxScore) {
             scoreValid = false;
         }
         return childrenValid && scoreValid;
@@ -117,7 +116,7 @@ var ResultSchemaValidator = (function () {
             return containsOtherCategory;
         }
     };
-    return ResultSchemaValidator;
+    return ResultValidator;
 })();
-exports.ResultSchemaValidator = ResultSchemaValidator;
+exports.ResultValidator = ResultValidator;
 //# sourceMappingURL=result.js.map
