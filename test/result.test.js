@@ -1,24 +1,27 @@
 /// <reference path="../typings/test.d.ts"/>
 var chai = require("chai");
 var result = require("../model/result");
-var Categories = require("../model/categories");
+var categories = require("../model/categories");
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 var expect = chai.expect;
+var Categories = categories.Categories;
+var ANY_CATEGORY = Categories.A10_10;
+var ANY_CHILD_CATEGORY = Categories.A10_1;
 describe("Result", function () {
     it("should have a score of 0 by default", function () {
-        var res = new ResultFactory("sh", "cat").create();
+        var res = new ResultFactory("sh", ANY_CATEGORY).create();
         expect(res).to.have.property("score", 0);
     });
     describe("Result with no children", function () {
-        var factory = new ResultFactory("sh", "cat");
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
         factory.setScore(591);
         var res = factory.create();
         it("should have a shooter", function () {
             expect(res).to.have.property("shooter", "sh");
         });
         it("should have a category", function () {
-            expect(res).to.have.property("category", "cat");
+            expect(res).to.have.property("category", ANY_CATEGORY);
         });
         it("should have a score of 591", function () {
             expect(res).to.have.property("score", 591);
@@ -28,15 +31,15 @@ describe("Result", function () {
         });
     });
     describe("Child tree with height 1", function () {
-        var factory = new ResultFactory("sh", "match");
-        factory.child("kneeling", 290).add();
-        factory.child("standing", 280).add();
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
+        factory.child(ANY_CHILD_CATEGORY, 290).add();
+        factory.child(ANY_CHILD_CATEGORY, 280).add();
         var res = factory.create();
         it("should have a shooter", function () {
             expect(res).to.have.property("shooter", "sh");
         });
         it("should have a category", function () {
-            expect(res).to.have.property("category", "match");
+            expect(res).to.have.property("category", ANY_CATEGORY);
         });
         it("should have 2 children", function () {
             expect(res).to.have.property("children").with.length(2);
@@ -47,7 +50,7 @@ describe("Result", function () {
         describe("first child", function () {
             var child = res.children[0];
             it("should have a category", function () {
-                expect(child).to.have.property("category", "kneeling");
+                expect(child).to.have.property("category", ANY_CHILD_CATEGORY);
             });
             it("should not have children", function () {
                 expect(child).to.have.property("children").with.length(0);
@@ -59,7 +62,7 @@ describe("Result", function () {
         describe("second child", function () {
             var child = res.children[1];
             it("should have a category", function () {
-                expect(child).to.have.property("category", "standing");
+                expect(child).to.have.property("category", ANY_CHILD_CATEGORY);
             });
             it("should not have children", function () {
                 expect(child).to.have.property("children").with.length(0);
@@ -70,15 +73,15 @@ describe("Result", function () {
         });
     });
     describe("Child tree with height 2", function () {
-        var factory = new ResultFactory("sh", "cat1");
-        var factory_c11 = factory.child("cat1.1");
-        factory_c11.child("cat1.1.1", 80).add();
-        factory_c11.child("cat1.1.2", 81).add();
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
+        var factory_c11 = factory.child(ANY_CATEGORY);
+        factory_c11.child(ANY_CHILD_CATEGORY, 80).add();
+        factory_c11.child(ANY_CHILD_CATEGORY, 81).add();
         factory_c11.add();
-        var factory_c12 = factory.child("cat1.2");
-        factory_c12.child("cat1.2.1", 90).add();
-        factory_c12.child("cat1.2.2", 91).add();
-        factory_c12.child("cat1.2.3", 92).add();
+        var factory_c12 = factory.child(ANY_CATEGORY);
+        factory_c12.child(ANY_CATEGORY, 90).add();
+        factory_c12.child(ANY_CATEGORY, 91).add();
+        factory_c12.child(ANY_CATEGORY, 92).add();
         factory_c12.add();
         var res = factory.create();
         it("should have 2 children", function () {
@@ -142,19 +145,6 @@ describe("Result", function () {
         });
     });
     describe("Schemas", function () {
-        it("should detect unknown categories", function () {
-            var factory = new result.ResultFactory("Horst", "WTF!");
-            var create = function () {
-                new ResultSchemaValidator(factory.create());
-            };
-            expect(create).to.throw();
-        });
-        it("should have a schema for every category", function () {
-            Categories.ALL.forEach(function (category) {
-                var factory = new ResultFactory("Horst", category);
-                new ResultSchemaValidator(factory.create());
-            });
-        });
         it("should always contain it's specified category", function () {
             var factory = new ResultFactory("Horst", Categories.A10_20);
             factory.child(Categories.A10_1).add();
@@ -168,46 +158,46 @@ describe("Result", function () {
             invalidFactory.add();
             checkInvalid(factory.create(), "The results contains nested results which are invalid, but they were not detected");
         });
-        describe(Categories.A10_1, function () {
+        describe(Categories.A10_1.name, function () {
             resultWithNoChildrenTestSuite(Categories.A10_1, 10);
         });
-        describe(Categories.A10_10, function () {
+        describe(Categories.A10_10.name, function () {
             combinedResultTestSuite(Categories.A10_10, Categories.A10_1, 10, 100);
         });
-        describe(Categories.A10_20, function () {
+        describe(Categories.A10_20.name, function () {
             combinedResultTestSuite(Categories.A10_20, Categories.A10_10, 2, 200);
         });
-        describe(Categories.A10_30, function () {
+        describe(Categories.A10_30.name, function () {
             combinedResultTestSuite(Categories.A10_30, Categories.A10_10, 3, 300);
         });
-        describe(Categories.A10_40, function () {
+        describe(Categories.A10_40.name, function () {
             combinedResultTestSuite(Categories.A10_40, Categories.A10_10, 4, 400);
         });
-        describe(Categories.A10_60, function () {
+        describe(Categories.A10_60.name, function () {
             combinedResultTestSuite(Categories.A10_60, Categories.A10_10, 6, 600);
         });
-        describe(Categories.A30_K_1, function () {
+        describe(Categories.A30_K_1.name, function () {
             resultWithNoChildrenTestSuite(Categories.A30_K_1, 10);
         });
-        describe(Categories.A30_K_10, function () {
+        describe(Categories.A30_K_10.name, function () {
             combinedResultTestSuite(Categories.A30_K_10, Categories.A30_K_1, 10, 100);
         });
-        describe(Categories.A30_K_20, function () {
+        describe(Categories.A30_K_20.name, function () {
             combinedResultTestSuite(Categories.A30_K_20, Categories.A30_K_10, 2, 200);
         });
-        describe(Categories.A30_K_30, function () {
+        describe(Categories.A30_K_30.name, function () {
             combinedResultTestSuite(Categories.A30_K_30, Categories.A30_K_10, 3, 300);
         });
-        describe(Categories.A30_S_1, function () {
+        describe(Categories.A30_S_1.name, function () {
             resultWithNoChildrenTestSuite(Categories.A30_S_1, 10);
         });
-        describe(Categories.A30_S_10, function () {
+        describe(Categories.A30_S_10.name, function () {
             combinedResultTestSuite(Categories.A30_S_10, Categories.A30_S_1, 10, 100);
         });
-        describe(Categories.A30_S_20, function () {
+        describe(Categories.A30_S_20.name, function () {
             combinedResultTestSuite(Categories.A30_S_20, Categories.A30_S_10, 2, 200);
         });
-        describe(Categories.A30_S_30, function () {
+        describe(Categories.A30_S_30.name, function () {
             combinedResultTestSuite(Categories.A30_S_30, Categories.A30_S_10, 3, 300);
         });
         function resultWithNoChildrenTestSuite(category, maxScore) {

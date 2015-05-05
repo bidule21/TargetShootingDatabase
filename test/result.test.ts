@@ -2,21 +2,26 @@
 
 import chai = require("chai");
 import result = require("../model/result");
-import Categories = require("../model/categories");
+import categories = require("../model/categories");
 
 var ResultSchemaValidator = result.ResultSchemaValidator;
 var ResultFactory = result.ResultFactory;
 var expect = chai.expect;
 
+var Categories = categories.Categories;
+
+var ANY_CATEGORY = Categories.A10_10;
+var ANY_CHILD_CATEGORY = Categories.A10_1;
+
 describe("Result", () => {
 
     it("should have a score of 0 by default", () => {
-        var res = new ResultFactory("sh", "cat").create();
+        var res = new ResultFactory("sh", ANY_CATEGORY).create();
         expect(res).to.have.property("score", 0)
     });
 
     describe("Result with no children", () => {
-        var factory = new ResultFactory("sh", "cat");
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
         factory.setScore(591);
         var res = factory.create();
 
@@ -25,7 +30,7 @@ describe("Result", () => {
         });
 
         it("should have a category", () => {
-            expect(res).to.have.property("category", "cat")
+            expect(res).to.have.property("category", ANY_CATEGORY)
         });
 
         it("should have a score of 591", () => {
@@ -38,9 +43,9 @@ describe("Result", () => {
     });
 
     describe("Child tree with height 1", () => {
-        var factory = new ResultFactory("sh", "match");
-        factory.child("kneeling", 290).add();
-        factory.child("standing", 280).add();
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
+        factory.child(ANY_CHILD_CATEGORY, 290).add();
+        factory.child(ANY_CHILD_CATEGORY, 280).add();
 
         var res = factory.create();
 
@@ -49,7 +54,7 @@ describe("Result", () => {
         });
 
         it("should have a category", () => {
-            expect(res).to.have.property("category", "match")
+            expect(res).to.have.property("category", ANY_CATEGORY)
         });
 
         it("should have 2 children", () => {
@@ -63,7 +68,7 @@ describe("Result", () => {
         describe("first child", () => {
             var child = res.children[0];
             it("should have a category", () => {
-                expect(child).to.have.property("category", "kneeling")
+                expect(child).to.have.property("category", ANY_CHILD_CATEGORY)
             });
 
             it("should not have children", () => {
@@ -78,7 +83,7 @@ describe("Result", () => {
         describe("second child", () => {
             var child = res.children[1];
             it("should have a category", () => {
-                expect(child).to.have.property("category", "standing")
+                expect(child).to.have.property("category", ANY_CHILD_CATEGORY)
             });
 
             it("should not have children", () => {
@@ -92,17 +97,17 @@ describe("Result", () => {
     });
 
     describe("Child tree with height 2", () => {
-        var factory = new ResultFactory("sh", "cat1");
+        var factory = new ResultFactory("sh", ANY_CATEGORY);
 
-        var factory_c11 = factory.child("cat1.1");
-        factory_c11.child("cat1.1.1", 80).add();
-        factory_c11.child("cat1.1.2", 81).add();
+        var factory_c11 = factory.child(ANY_CATEGORY);
+        factory_c11.child(ANY_CHILD_CATEGORY, 80).add();
+        factory_c11.child(ANY_CHILD_CATEGORY, 81).add();
         factory_c11.add();
 
-        var factory_c12 = factory.child("cat1.2");
-        factory_c12.child("cat1.2.1", 90).add();
-        factory_c12.child("cat1.2.2", 91).add();
-        factory_c12.child("cat1.2.3", 92).add();
+        var factory_c12 = factory.child(ANY_CATEGORY);
+        factory_c12.child(ANY_CATEGORY, 90).add();
+        factory_c12.child(ANY_CATEGORY, 91).add();
+        factory_c12.child(ANY_CATEGORY, 92).add();
         factory_c12.add();
 
         var res = factory.create();
@@ -178,21 +183,6 @@ describe("Result", () => {
     });
 
     describe("Schemas", () => {
-        it("should detect unknown categories", () => {
-            var factory = new result.ResultFactory("Horst", "WTF!");
-            var create = function () {
-                new ResultSchemaValidator(factory.create())
-            };
-            expect(create).to.throw()
-        });
-
-        it("should have a schema for every category", () => {
-            Categories.ALL.forEach((category) => {
-                var factory = new ResultFactory("Horst", category);
-                new ResultSchemaValidator(factory.create())
-            })
-        });
-
         it("should always contain it's specified category", () => {
             var factory = new ResultFactory("Horst", Categories.A10_20);
             factory.child(Categories.A10_1).add();
@@ -209,59 +199,59 @@ describe("Result", () => {
             checkInvalid(factory.create(), "The results contains nested results which are invalid, but they were not detected")
         });
 
-        describe(Categories.A10_1, () => {
+        describe(Categories.A10_1.name, () => {
             resultWithNoChildrenTestSuite(Categories.A10_1, 10)
         });
 
-        describe(Categories.A10_10, () => {
+        describe(Categories.A10_10.name, () => {
             combinedResultTestSuite(Categories.A10_10, Categories.A10_1, 10, 100)
         });
 
-        describe(Categories.A10_20, () => {
+        describe(Categories.A10_20.name, () => {
             combinedResultTestSuite(Categories.A10_20, Categories.A10_10, 2, 200)
         });
 
-        describe(Categories.A10_30, () => {
+        describe(Categories.A10_30.name, () => {
             combinedResultTestSuite(Categories.A10_30, Categories.A10_10, 3, 300)
         });
 
-        describe(Categories.A10_40, () => {
+        describe(Categories.A10_40.name, () => {
             combinedResultTestSuite(Categories.A10_40, Categories.A10_10, 4, 400)
         });
 
-        describe(Categories.A10_60, () => {
+        describe(Categories.A10_60.name, () => {
             combinedResultTestSuite(Categories.A10_60, Categories.A10_10, 6, 600)
         });
 
-        describe(Categories.A30_K_1, () => {
+        describe(Categories.A30_K_1.name, () => {
             resultWithNoChildrenTestSuite(Categories.A30_K_1, 10)
         });
 
-        describe(Categories.A30_K_10, () => {
+        describe(Categories.A30_K_10.name, () => {
             combinedResultTestSuite(Categories.A30_K_10, Categories.A30_K_1, 10, 100)
         });
 
-        describe(Categories.A30_K_20, () => {
+        describe(Categories.A30_K_20.name, () => {
             combinedResultTestSuite(Categories.A30_K_20, Categories.A30_K_10, 2, 200)
         });
 
-        describe(Categories.A30_K_30, () => {
+        describe(Categories.A30_K_30.name, () => {
             combinedResultTestSuite(Categories.A30_K_30, Categories.A30_K_10, 3, 300)
         });
 
-        describe(Categories.A30_S_1, () => {
+        describe(Categories.A30_S_1.name, () => {
             resultWithNoChildrenTestSuite(Categories.A30_S_1, 10)
         });
 
-        describe(Categories.A30_S_10, () => {
+        describe(Categories.A30_S_10.name, () => {
             combinedResultTestSuite(Categories.A30_S_10, Categories.A30_S_1, 10, 100)
         });
 
-        describe(Categories.A30_S_20, () => {
+        describe(Categories.A30_S_20.name, () => {
             combinedResultTestSuite(Categories.A30_S_20, Categories.A30_S_10, 2, 200)
         });
 
-        describe(Categories.A30_S_30, () => {
+        describe(Categories.A30_S_30.name, () => {
             combinedResultTestSuite(Categories.A30_S_30, Categories.A30_S_10, 3, 300)
         });
 
@@ -287,7 +277,7 @@ describe("Result", () => {
             })
         }
 
-        function checkScore(category:string, maximum:number) {
+        function checkScore(category:categories.Category, maximum:number) {
             var factory = new ResultFactory("horst", category);
 
             var resultWithMinimumScore = factory.setScore(0).create();
