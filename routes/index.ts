@@ -7,7 +7,7 @@ var router = express.Router();
 router.get("/", function(req, res, next) {
         res.render("index",
             { title: "Target Shooting Database",
-                environment: process.env.SYSTEM_ENVIRONMENT
+                environment: process.env    .NODE_ENV
             }
         );
 });
