@@ -4,11 +4,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/**
- * Created by jonashansen on 27/04/15.
- */
-var categories = require("./categories");
-var Categories = categories.Categories;
 var NestedResultImpl = (function () {
     function NestedResultImpl(category, score) {
         if (score === void 0) { score = 0; }

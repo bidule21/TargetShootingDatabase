@@ -2,7 +2,6 @@
  * Created by jonashansen on 27/04/15.
  */
 import categories = require("./categories");
-var Categories = categories.Categories;
 
 export interface Result extends NestedResult {
     shooter: string
