@@ -25,7 +25,6 @@ var PutGateway = (function () {
         }
         else {
             var apiKey = req.body.api_key;
-            console.log(this.keyChecker);
             if (!this.keyChecker.check(apiKey)) {
                 res.status(401);
                 res.send(exports.ERR_INVALID_API_KEY);
