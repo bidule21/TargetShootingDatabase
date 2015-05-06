@@ -4,97 +4,80 @@
 import categories = require("./categories");
 var Categories = categories.Categories;
 
-export interface Result {
-    category: categories.Category
-    score: number
+export interface Result extends NestedResult {
     shooter: string
-    children: Result[]
 }
 
-class BaseResultFactory {
-    scoreCalculator:() => number;
-    children:Result[];
-
-    constructor(public shooter:string, public category:categories.Category) {
-        this.scoreCalculator = () => {
-            return 0
-        };
-        this.children = []
-    }
-
-    public setScore(score:number):BaseResultFactory {
-        this.scoreCalculator = () => {
-            return score
-        };
-        return this
-    }
-
-    public create():Result {
-        return new ResultHelper(this.shooter, this.category, this.children, this.scoreCalculator)
-    }
+export interface NestedResult {
+    score:number
+    category: categories.Category
+    children?: NestedResult[]
 }
 
-export class ResultFactory extends BaseResultFactory {
+class NestedResultImpl implements NestedResult {
 
-    public child(category:categories.Category, score?:number):NestedResultFactory {
-        var nestedFactory = new NestedResultFactory(
-                nestedResult=> {
-                this.children.push(nestedResult)
-            },
-            this,
-            category
-        );
+    public category:categories.Category;
+    public children:NestedResult[];
 
-        if (score) {
-            nestedFactory.setScore(score)
-        }
+    private scoreCalculator:()=>number;
 
-        this.scoreCalculator = () => {
-            var score = 0;
-            this.children.forEach(child=> {
-                score += child.score
-            });
-            return score
-        };
-
-        return nestedFactory
-    }
-}
-
-class NestedResultFactory extends ResultFactory {
-    onAddCallback:(nestedResult:Result) => void;
-
-    constructor(onAddCallback:(nestedResult:Result) => void, parentFactory:ResultFactory, category:categories.Category) {
-        super(parentFactory.shooter, category);
-        this.onAddCallback = onAddCallback
-    }
-
-    public add() {
-        this.onAddCallback(this.create());
-    }
-}
-
-class ResultHelper implements Result {
-    scoreCalculator:() => number;
-
-    constructor(public shooter:string, public category:categories.Category, public children:Result[], scoreCalculator:() => number) {
-        this.scoreCalculator = scoreCalculator
+    constructor(category:categories.Category, score = 0) {
+        this.category = category;
+        this.children = [];
+        this.scoreCalculator = this.calculateFixScore(score);
     }
 
     get score() {
-        return this.scoreCalculator()
+        return this.scoreCalculator();
+    }
+
+    set score(score:number) {
+        if (this.children.length == 0) {
+            this.scoreCalculator = this.calculateFixScore(score);
+        }
+    }
+
+    public wrap(result:NestedResult):NestedResultImpl {
+        var nestedResult = new NestedResultImpl(result.category, result.score);
+        this.children.push(nestedResult);
+        this.scoreCalculator = this.calculateScoreByChildren;
+        return nestedResult;
+    }
+
+
+    private calculateScoreByChildren() {
+        var score = 0;
+        this.children.forEach((result)=> {
+            score += result.score;
+        });
+        return score;
+    }
+
+    private calculateFixScore(score:number) {
+        return ()=> {
+            return score
+        };
+    }
+}
+
+export class ResultImpl extends NestedResultImpl implements Result {
+
+    public children:NestedResult[];
+
+    constructor(public shooter:string, category:categories.Category, score?:number) {
+        super(category, score);
     }
 }
 
 export class ResultValidator {
-    public isValid(result:Result):boolean {
+    public isValid(result:NestedResult):boolean {
         var children = result.children;
         var childrenValid = true;
         if (children.length > 0) {
             if (children.length === result.category.allowedChildren) {
                 childrenValid = !containsOtherCategoryThan(result.category.allowedChildrenCategory, result);
 
-                var validator=this;
+                var validator = this;
                 children.forEach((child) => {
                     if (childrenValid) {
                         childrenValid = validator.isValid(child);

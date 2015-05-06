@@ -5,198 +5,57 @@ import result = require("../model/result");
 import categories = require("../model/categories");
 
 var ResultSchemaValidator = result.ResultValidator;
-var ResultFactory = result.ResultFactory;
 var expect = chai.expect;
 
 var Categories = categories.Categories;
 
-var ANY_CATEGORY = Categories.A10_10;
-var ANY_CHILD_CATEGORY = Categories.A10_1;
-
 describe("Result", () => {
 
-    it("should have a score of 0 by default", () => {
-        var res = new ResultFactory("sh", ANY_CATEGORY).create();
-        expect(res).to.have.property("score", 0)
-    });
-
-    describe("Result with no children", () => {
-        var factory = new ResultFactory("sh", ANY_CATEGORY);
-        factory.setScore(591);
-        var res = factory.create();
-
-        it("should have a shooter", () => {
-            expect(res).to.have.property("shooter", "sh");
+    describe("score", () => {
+        it("should be 0 by default",()=>{
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            expect(res.score).to.equal(0);
         });
 
-        it("should have a category", () => {
-            expect(res).to.have.property("category", ANY_CATEGORY)
+        it("should be editable",()=>{
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            res.score=100;
+            expect(res.score).to.equal(100);
         });
 
-        it("should have a score of 591", () => {
-            expect(res).to.have.property("score", 591)
+        it("should cummulate the score when it has children", ()=>{
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            res.wrap({category: Categories.A10_10, score: 98});
+            res.wrap({category: Categories.A10_10, score: 97});
+
+            expect(res.score).to.equal(98 + 97);
         });
 
-        it("should not have children", () => {
-            expect(res).to.have.property("children").with.length(0)
-        })
-    });
+        it("should be ignored completely when the result has children", ()=>{
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            res.wrap({category: Categories.A10_10, score: 98});
+            res.wrap({category: Categories.A10_10, score: 97});
+            res.score=100; // Ignored
 
-    describe("Child tree with height 1", () => {
-        var factory = new ResultFactory("sh", ANY_CATEGORY);
-        factory.child(ANY_CHILD_CATEGORY, 290).add();
-        factory.child(ANY_CHILD_CATEGORY, 280).add();
-
-        var res = factory.create();
-
-        it("should have a shooter", () => {
-            expect(res).to.have.property("shooter", "sh")
+            expect(res.score).to.equal(98+97);
         });
-
-        it("should have a category", () => {
-            expect(res).to.have.property("category", ANY_CATEGORY)
-        });
-
-        it("should have 2 children", () => {
-            expect(res).to.have.property("children").with.length(2)
-        });
-
-        it("should cummulate the score of the nested results", () => {
-            expect(res.score).to.equal(290 + 280)
-        });
-
-        describe("first child", () => {
-            var child = res.children[0];
-            it("should have a category", () => {
-                expect(child).to.have.property("category", ANY_CHILD_CATEGORY)
-            });
-
-            it("should not have children", () => {
-                expect(child).to.have.property("children").with.length(0)
-            });
-
-            it("should have a score of 290", () => {
-                expect(child.score).to.equal(290)
-            })
-        });
-
-        describe("second child", () => {
-            var child = res.children[1];
-            it("should have a category", () => {
-                expect(child).to.have.property("category", ANY_CHILD_CATEGORY)
-            });
-
-            it("should not have children", () => {
-                expect(child).to.have.property("children").with.length(0)
-            });
-
-            it("should have a score of 280", () => {
-                expect(child.score).to.equal(280)
-            })
-        })
-    });
-
-    describe("Child tree with height 2", () => {
-        var factory = new ResultFactory("sh", ANY_CATEGORY);
-
-        var factory_c11 = factory.child(ANY_CATEGORY);
-        factory_c11.child(ANY_CHILD_CATEGORY, 80).add();
-        factory_c11.child(ANY_CHILD_CATEGORY, 81).add();
-        factory_c11.add();
-
-        var factory_c12 = factory.child(ANY_CATEGORY);
-        factory_c12.child(ANY_CATEGORY, 90).add();
-        factory_c12.child(ANY_CATEGORY, 91).add();
-        factory_c12.child(ANY_CATEGORY, 92).add();
-        factory_c12.add();
-
-        var res = factory.create();
-
-        it("should have 2 children", () => {
-            expect(res).to.have.property("children").with.length(2)
-        });
-
-        describe("tier 1.1", () => {
-            it("should have 2 children", () => {
-                expect(res.children[0]).to.have.property("children").with.length(2)
-            });
-
-            it("should have a score of " + (80 + 81), () => {
-                expect(res.children[0].score).to.equal(80 + 81)
-            });
-
-            describe("tier 1.1.1", () => {
-                it("shoud not have children", () => {
-                    expect(res.children[0].children[0]).to.have.property("children").with.length(0)
-                });
-                it("should have a score of 80", () => {
-                    expect(res.children[0].children[0].score).to.equal(80)
-                })
-            });
-
-            describe("tier 1.1.2", () => {
-                it("shoud not have children", () => {
-                    expect(res.children[0].children[1]).to.have.property("children").with.length(0)
-                });
-                it("should have a score of 81", () => {
-                    expect(res.children[0].children[1].score).to.equal(81)
-                })
-            })
-        });
-
-        describe("tier 1.2", () => {
-            it("should have 3 children", () => {
-                expect(res.children[1]).to.have.property("children").with.length(3)
-            });
-
-            it("should have a score of " + (90 + 91 + 92), () => {
-                expect(res.children[1].score).to.equal(90 + 91 + 92)
-            });
-
-            describe("tier 1.2.1", () => {
-                it("shoud not have children", () => {
-                    expect(res.children[1].children[0]).to.have.property("children").with.length(0)
-                });
-                it("should have a score of 90", () => {
-                    expect(res.children[1].children[0].score).to.equal(90)
-                })
-            });
-
-            describe("tier 1.2.2", () => {
-                it("shoud not have children", () => {
-                    expect(res.children[1].children[1]).to.have.property("children").with.length(0)
-                });
-                it("should have a score of 91", () => {
-                    expect(res.children[1].children[1].score).to.equal(91)
-                })
-            });
-
-            describe("tier 1.2.3", () => {
-                it("shoud not have children", () => {
-                    expect(res.children[1].children[2]).to.have.property("children").with.length(0)
-                });
-                it("should have a score of 92", () => {
-                    expect(res.children[1].children[2].score).to.equal(92)
-                })
-            })
-        })
     });
 
     describe("Schemas", () => {
         it("should always contain it's specified category", () => {
-            var factory = new ResultFactory("Horst", Categories.A10_20);
-            factory.child(Categories.A10_1).add();
-            factory.child(Categories.A10_1).add();
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            res.wrap({category:Categories.A10_1, score:0});
+            res.wrap({category:Categories.A10_1, score:0});
 
-            checkInvalid(factory.create(), "A result may only have child schema.Categories which are specified in its schema")
+            checkInvalid(res, "A result may only have child schema.Categories which are specified in its schema")
         });
 
         it("should check results recursively", () => {
-            var factory = new ResultFactory("Horst", Categories.A10_20);
-            var invalidFactory = factory.child(Categories.A10_10);
-            invalidFactory.child(Categories.A10_10).add();
-            invalidFactory.add();
-            checkInvalid(factory.create(), "The results contains nested results which are invalid, but they were not detected")
+            var res = new result.ResultImpl("Horst", Categories.A10_20);
+            var wrapped = res.wrap({category:Categories.A10_10, score:0});
+            wrapped.wrap({category:Categories.A10_10, score:0});
+
+            checkInvalid(res, "The results contains nested results which are invalid, but they were not detected")
         });
 
         describe(Categories.A10_1.name, () => {
@@ -278,13 +137,11 @@ describe("Result", () => {
         }
 
         function checkScore(category:categories.Category, maximum:number) {
-            var factory = new ResultFactory("horst", category);
-
-            var resultWithMinimumScore = factory.setScore(0).create();
-            var resultWithMaximumScore = factory.setScore(maximum).create();
-            var resultWithScoreInBetween = factory.setScore(maximum / 2).create();
-            var resultWithNegativeScore = factory.setScore(-1).create();
-            var resultWithScoreOverflow = factory.setScore(maximum + 1).create();
+            var resultWithMinimumScore = new result.ResultImpl("Horst",category, 0);
+            var resultWithMaximumScore = new result.ResultImpl("Horst",category, maximum);
+            var resultWithScoreInBetween = new result.ResultImpl("Horst",category, maximum/2);
+            var resultWithNegativeScore = new result.ResultImpl("Horst",category, -1);
+            var resultWithScoreOverflow = new result.ResultImpl("Horst",category, maximum+1);
 
             checkValid(resultWithMinimumScore,
                 category + " should allow results with a score of 0");
@@ -332,11 +189,11 @@ describe("Result", () => {
                 overflowAmount + " results (as children) should not be allowed for category " + category);
 
             function split(str, times) {
-                var strs = [];
+                var strings = [];
                 for (var i = 0; i < times; i++) {
-                    strs.push(str)
+                    strings.push(str)
                 }
-                return strs
+                return strings
             }
         }
 
@@ -348,11 +205,11 @@ describe("Result", () => {
         }
 
         function makeParentWithChildren(parentCategory, childrenCategories) {
-            var factory = new ResultFactory("Horst", parentCategory);
+            var res = new result.ResultImpl("Horst", parentCategory);
             childrenCategories.forEach((category) => {
-                factory.child(category).add()
+                res.wrap({category:category,score:0});
             });
-            return factory.create()
+            return res
         }
 
         function checkValid(result, message) {

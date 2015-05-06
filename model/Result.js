@@ -9,78 +9,54 @@ var __extends = this.__extends || function (d, b) {
  */
 var categories = require("./categories");
 var Categories = categories.Categories;
-var BaseResultFactory = (function () {
-    function BaseResultFactory(shooter, category) {
-        this.shooter = shooter;
+var NestedResultImpl = (function () {
+    function NestedResultImpl(category, score) {
+        if (score === void 0) { score = 0; }
         this.category = category;
-        this.scoreCalculator = function () {
-            return 0;
-        };
         this.children = [];
+        this.scoreCalculator = this.calculateFixScore(score);
     }
-    BaseResultFactory.prototype.setScore = function (score) {
-        this.scoreCalculator = function () {
-            return score;
-        };
-        return this;
-    };
-    BaseResultFactory.prototype.create = function () {
-        return new ResultHelper(this.shooter, this.category, this.children, this.scoreCalculator);
-    };
-    return BaseResultFactory;
-})();
-var ResultFactory = (function (_super) {
-    __extends(ResultFactory, _super);
-    function ResultFactory() {
-        _super.apply(this, arguments);
-    }
-    ResultFactory.prototype.child = function (category, score) {
-        var _this = this;
-        var nestedFactory = new NestedResultFactory(function (nestedResult) {
-            _this.children.push(nestedResult);
-        }, this, category);
-        if (score) {
-            nestedFactory.setScore(score);
-        }
-        this.scoreCalculator = function () {
-            var score = 0;
-            _this.children.forEach(function (child) {
-                score += child.score;
-            });
-            return score;
-        };
-        return nestedFactory;
-    };
-    return ResultFactory;
-})(BaseResultFactory);
-exports.ResultFactory = ResultFactory;
-var NestedResultFactory = (function (_super) {
-    __extends(NestedResultFactory, _super);
-    function NestedResultFactory(onAddCallback, parentFactory, category) {
-        _super.call(this, parentFactory.shooter, category);
-        this.onAddCallback = onAddCallback;
-    }
-    NestedResultFactory.prototype.add = function () {
-        this.onAddCallback(this.create());
-    };
-    return NestedResultFactory;
-})(ResultFactory);
-var ResultHelper = (function () {
-    function ResultHelper(shooter, category, children, scoreCalculator) {
-        this.shooter = shooter;
-        this.category = category;
-        this.children = children;
-        this.scoreCalculator = scoreCalculator;
-    }
-    Object.defineProperty(ResultHelper.prototype, "score", {
+    Object.defineProperty(NestedResultImpl.prototype, "score", {
         get: function () {
             return this.scoreCalculator();
+        },
+        set: function (score) {
+            if (this.children.length == 0) {
+                this.scoreCalculator = this.calculateFixScore(score);
+            }
         },
         enumerable: true,
         configurable: true
     });
-    return ResultHelper;
+    NestedResultImpl.prototype.wrap = function (result) {
+        var nestedResult = new NestedResultImpl(result.category, result.score);
+        this.children.push(nestedResult);
+        this.scoreCalculator = this.calculateScoreByChildren;
+        return nestedResult;
+    };
+    NestedResultImpl.prototype.calculateScoreByChildren = function () {
+        var score = 0;
+        this.children.forEach(function (result) {
+            score += result.score;
+        });
+        return score;
+    };
+    NestedResultImpl.prototype.calculateFixScore = function (score) {
+        return function () {
+            return score;
+        };
+    };
+    return NestedResultImpl;
 })();
+var ResultImpl = (function (_super) {
+    __extends(ResultImpl, _super);
+    function ResultImpl(shooter, category, score) {
+        _super.call(this, category, score);
+        this.shooter = shooter;
+    }
+    return ResultImpl;
+})(NestedResultImpl);
+exports.ResultImpl = ResultImpl;
 var ResultValidator = (function () {
     function ResultValidator() {
     }
