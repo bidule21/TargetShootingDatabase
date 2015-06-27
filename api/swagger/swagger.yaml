@@ -18,6 +18,22 @@ consumes:
 produces:
   - application/json
 paths:
+  /shooters:
+    x-swagger-router-controller: shooter
+    get:
+      description: Returns all shooters of the system
+      operationId: getAllShooters
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Shooter"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
   /shooter/{id}:
     x-swagger-router-controller: shooter
     get:

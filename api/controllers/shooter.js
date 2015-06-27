@@ -26,21 +26,20 @@ var Shooter = require('../helpers/persistence.js').Shooter
   we specify that in the exports of this module that 'hello' maps to the function named 'hello'
  */
 module.exports = {
-  getShooterById: getShooterById
+  getShooterById: getShooterById,
+  getAllShooters: getAllShooters
 };
 
-/*
-  Functions in a127 controllers used for operations should take two parameters:
 
-  Param 1: a handle to the request object
-  Param 2: a handle to the response object
- */
 function getShooterById(req, res) {
-  // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
   var id = req.swagger.params.id.value;
   Shooter.find({_id:id},function(err,shooter){
     res.json(shooter);
   });
-  // this sends back a JSON response which is a single string
+}
 
+function getAllShooters(req, res) {
+  Shooter.find(function(err,shooters){
+    res.json(shooters);
+  });
 }
