@@ -18,39 +18,38 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+  /shooter/{id}:
+    x-swagger-router-controller: shooter
     get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
+      description: Returns the shooter with the specified ID
+      operationId: getShooterById
       parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
+        - name: id
+          in: path
+          description: The ID of the shooter
+          required: true
           type: string
       responses:
         "200":
           description: Success
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
+            $ref: "#/definitions/Shooter"
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/Error"
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
+  Shooter:
     required:
-      - message
+      - firstname
+      - lastname
     properties:
-      message:
+      firstname:
         type: string
-  ErrorResponse:
+      lastname:
+        type: string
+  Error:
     required:
       - message
     properties:
