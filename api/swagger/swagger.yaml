@@ -58,6 +58,40 @@ definitions:
         type: string
       lastname:
         type: string
+  Result:
+    required:
+      - score
+      - category
+      - time
+    properties:
+      score:
+        type: number
+        format: float
+      category:
+        type: string
+      time:
+        type: string
+        format: date-time
+      children:
+        type: array
+        items:
+          $ref: '#/definitions/Result'
+  Event:
+    required:
+      - description
+    properties:
+      description:
+        type: string
+      participations:
+        type: array
+        items:
+          $ref: '#/definitions/Participation'
+  Participation:
+    properties:
+      shooter:
+        type: string
+      result:
+        type: string
   Error:
     required:
       - message
