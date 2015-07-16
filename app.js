@@ -2,7 +2,7 @@
 
 // Connect to database
 var mongoose = require("mongoose");
-var connectionString = "mongodb://isd-full:isd-full@ds039261.mongolab.com:39261/heroku_app34497512"
+var connectionString = buildDatabaseUrl();
 mongoose.connect(connectionString);
 var db = mongoose.connection;
 db.on("error", function (callback) {
@@ -29,9 +29,6 @@ function buildDatabaseUrl() {
 
     return url;
 }
-
-
-
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
