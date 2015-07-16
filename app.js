@@ -14,7 +14,6 @@ db.once("open", function (callback) {
 });
 
 // Helper functions
-
 function buildDatabaseUrl() {
     var mongoHost = process.env.DB_HOST;
     var mongoDatabaseName = process.env.DB_NAME;
@@ -51,5 +50,5 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   var port = process.env.PORT || 10010;
   app.listen(port);
 
-  console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+  console.log('The server is running on http://127.0.0.1:' + port);
 });
