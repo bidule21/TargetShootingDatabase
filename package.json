@@ -10,9 +10,7 @@
   "dependencies": {
     "express": "^4.12.3",
     "swagger-express-mw": "0.0.x",
-    "mongoose": "~4.0.6",
-    "swagger-mongoose": "~0.1.2",
-    "yaml-to-json":"~0.3.0"
+    "mongoose": "~4.0.6"
   },
   "devDependencies": {
     "should": "^5.2.0",
