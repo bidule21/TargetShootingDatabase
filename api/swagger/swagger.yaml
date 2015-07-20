@@ -13,11 +13,11 @@ consumes:
 produces:
   - application/json
 paths:
-  /shooters:
+  /shooter:
     x-swagger-router-controller: shooter
     get:
       description: Returns all shooters of the system
-      operationId: getAllShooters
+      operationId: getShooters
       responses:
         "200":
           description: Success

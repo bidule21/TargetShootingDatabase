@@ -4,7 +4,7 @@ var Shooter = require('../helpers/models.js').Shooter
 
 module.exports = {
     getShooterById: getShooterById,
-    getAllShooters: getAllShooters,
+    getShooters: getShooters,
     postShooterByName: postShooterByName
 };
 
@@ -16,7 +16,7 @@ function getShooterById(req, res) {
     });
 }
 
-function getAllShooters(req, res) {
+function getShooters(req, res) {
     Shooter.find(function (err, shooters) {
         res.json(shooters);
     });
