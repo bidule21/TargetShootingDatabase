@@ -9,6 +9,7 @@ schemes:
   - https
 consumes:
   - application/json
+  - application/octet-stream
 produces:
   - application/json
 paths:
@@ -24,6 +25,30 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Shooter"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      operationId: postShooterByName
+      summary: Adds a shooter
+      description: Adds one shooter by his first and lastname.
+      parameters:
+        - name: firstname
+          in: query
+          type: string
+          description: Firstname of the shooter
+          required: true
+        - name: lastname
+          in: query
+          description: Lastname of the shooter
+          type: string
+          required: true
+      responses:
+        200:
+          description: The saved shooter
+          schema:
+            $ref: "#/definitions/Shooter"
         default:
           description: Error
           schema:
@@ -76,22 +101,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Result'
-  Event:
-    required:
-      - description
-    properties:
-      description:
-        type: string
-      participations:
-        type: array
-        items:
-          $ref: '#/definitions/Participation'
-  Participation:
-    properties:
-      shooter:
-        type: string
-      result:
-        type: string
   Error:
     required:
       - message
