@@ -73,6 +73,28 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"
+  /event:
+    x-swagger-router-controller: event
+    get:
+      operationId: getEvents
+      summary: Returns all events of the system
+      description: |
+        An event links shooters and their results together.
+        For example, an event may be a World Championship where many shooters
+        shoot many results (each of them shooting one result).
+        An event may also be a personal training where one shooter
+        scores exactly one result.
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
   Shooter:
     required:
@@ -101,6 +123,25 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Result'
+  Event:
+    required:
+      - description
+    properties:
+      description:
+        type: string
+      participations:
+        type: array
+        items:
+          $ref: '#/definitions/Participation'
+  Participation:
+    required:
+      - shooter
+      - result
+    properties:
+      shooter:
+        type: string
+      result:
+        type: string
   Error:
     required:
       - message

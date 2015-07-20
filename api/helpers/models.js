@@ -1,4 +1,5 @@
-'use strict'
+'use strict';
+
 var mongoose = require("mongoose");
 
 var Shooter = mongoose.model("Shooter",{
@@ -6,4 +7,9 @@ var Shooter = mongoose.model("Shooter",{
   lastname:String
 });
 
+var Event = mongoose.model("Event",{
+  description:String
+});
+
 exports.Shooter = Shooter;
+exports.Event = Event;
