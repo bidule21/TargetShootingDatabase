@@ -95,6 +95,27 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"
+  /result:
+    x-swagger-router-controller: result
+    post:
+      operationId: postResult
+      summary: Adds a result to the database
+      parameters:
+        - name: result
+          in: body
+          schema: 
+            $ref: "#/definitions/Result"
+          description: The whole result
+          required: true
+      responses:
+        200:
+          description: The id of the saved result
+          schema:
+            $ref: "#/definitions/ObjectId"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
   Shooter:
     required:
@@ -109,16 +130,12 @@ definitions:
     required:
       - score
       - category
-      - time
     properties:
       score:
         type: number
         format: float
       category:
         type: string
-      time:
-        type: string
-        format: date-time
       children:
         type: array
         items:
@@ -147,4 +164,10 @@ definitions:
       - message
     properties:
       message:
+        type: string
+  ObjectId:
+    required:
+     - id
+    properties:
+      id:
         type: string
