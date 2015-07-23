@@ -95,6 +95,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"
+  /event/{id}:
+    x-swagger-router-controller: event
+    get:
+      operationId: getEventById
+      description: Returns the event for the specified ID
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the event
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
   /result:
     x-swagger-router-controller: result
     post:
