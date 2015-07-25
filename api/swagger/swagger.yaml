@@ -115,6 +115,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"
+  /event/{id}/participation:
+    x-swagger-router-controller: event
+    post:
+      operationId: postParticipation
+      description: Adds a participation to the event
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the event
+          required: true
+          type: string
+        - name: shooterId
+          in: query
+          description: The ID of the participating shooter
+          required: true
+          type: string
+        - name: resultId
+          in: query
+          type: string
+          description: The ID of the result which the participating shooter has shot
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/StatusCode"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
   /result:
     x-swagger-router-controller: result
     post:
@@ -184,6 +214,18 @@ definitions:
       - message
     properties:
       message:
+        type: string
+  StatusCode:
+    required:
+      - code
+      - type
+      - message
+    properties:
+      code: 
+        type: number
+      type:
+        type: string
+      message: 
         type: string
   ObjectId:
     required:

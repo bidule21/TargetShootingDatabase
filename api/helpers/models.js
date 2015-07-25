@@ -1,22 +1,29 @@
 'use strict';
 
-var mongoose = require("mongoose");
+var mongoose = require('mongoose')
+    , Schema = mongoose.Schema;
 
-var Shooter = mongoose.model("Shooter",{
-  firstname:String,
-  lastname:String
+var shooterSchema = new Schema({
+    firstname: String,
+    lastname: String
 });
 
-var Event = mongoose.model("Event",{
-  description:String
+var eventSchema = new Schema({
+    description: String,
+    participations: [
+        {
+            shooter: {type:Schema.Types.ObjectId, ref:"Shooter"},
+            result: {type:Schema.Types.ObjectId, ref:"Result"}
+        }
+    ]
 });
 
-var Result = mongoose.model("Result",{
-  category:String,
-  score:Number,
-  children:[mongoose.Schema.Types.Mixed]
+var resultSchema = new Schema({
+    category: String,
+    score: Number,
+    children: [Schema.Types.Mixed]
 });
 
-exports.Shooter = Shooter;
-exports.Event = Event;
-exports.Result  = Result;
+exports.Shooter = mongoose.model('Shooter', shooterSchema);
+exports.Event = mongoose.model('Event', eventSchema);
+exports.Result = mongoose.model('Result', resultSchema);
