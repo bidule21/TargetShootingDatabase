@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var Shooter = require('../helpers/models.js').Shooter
+var Shooter = require("../helpers/models.js").Shooter
 
 module.exports = {
     getShooterById: getShooterById,
@@ -30,7 +30,7 @@ function postShooterByName(req, res) {
 
     shooter.save(function (err) {
         if (err) {
-            res.status(500).json('Error while writing record. ' + err);
+            res.status(500).json("Error while writing record. " + err);
         }
         res.json(shooter);
     });

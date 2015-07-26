@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var Result = require('../helpers/models.js').Result;
+var Result = require("../helpers/models.js").Result;
 
 module.exports = {
     postResult: postResult
@@ -11,7 +11,7 @@ function postResult(req,res){
 
     result.save(function(err){
         if(err){
-            res.status(500).json('Error while writing record. ' + err);
+            res.status(500).json("Error while writing record. " + err);
         }
         res.json({
             code: 200,

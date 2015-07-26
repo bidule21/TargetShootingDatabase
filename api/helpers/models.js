@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var mongoose = require('mongoose')
+var mongoose = require("mongoose")
     , Schema = mongoose.Schema;
 
 var shooterSchema = new Schema({
@@ -24,6 +24,6 @@ var resultSchema = new Schema({
     children: [Schema.Types.Mixed]
 });
 
-exports.Shooter = mongoose.model('Shooter', shooterSchema);
-exports.Event = mongoose.model('Event', eventSchema);
-exports.Result = mongoose.model('Result', resultSchema);
+exports.Shooter = mongoose.model("Shooter", shooterSchema);
+exports.Event = mongoose.model("Event", eventSchema);
+exports.Result = mongoose.model("Result", resultSchema);
