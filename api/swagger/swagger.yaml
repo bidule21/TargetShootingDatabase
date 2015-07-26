@@ -140,7 +140,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/StatusCode"
+            $ref: "#/definitions/Answer"
         default:
           description: Error
           schema:
@@ -161,7 +161,7 @@ paths:
         200:
           description: The id of the saved result
           schema:
-            $ref: "#/definitions/ObjectId"
+            $ref: "#/definitions/Answer"
         default:
           description: Error
           schema:
@@ -215,7 +215,7 @@ definitions:
     properties:
       message:
         type: string
-  StatusCode:
+  Answer:
     required:
       - code
       - type
@@ -226,10 +226,4 @@ definitions:
       type:
         type: string
       message: 
-        type: string
-  ObjectId:
-    required:
-     - id
-    properties:
-      id:
         type: string

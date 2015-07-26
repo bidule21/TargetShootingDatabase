@@ -13,7 +13,11 @@ function postResult(req,res){
         if(err){
             res.status(500).json('Error while writing record. ' + err);
         }
-        res.json(result._id);
+        res.json({
+            code: 200,
+            type: "SUCCESS",
+            message: result._id
+        });
     });
 }
 
