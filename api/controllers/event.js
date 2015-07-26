@@ -1,6 +1,9 @@
 "use strict";
 
-var Event = require("../helpers/models.js").Event;
+var Event = require("../helpers/models.js").Event,
+    answer = require("./answer.js"),
+    answerGet = answer.answerGet,
+    answerUpdate = answer.answerUpdate;
 
 module.exports = {
     getEvents: getEvents,
@@ -11,20 +14,13 @@ module.exports = {
 
 function getEvents(req, res) {
     Event.find(function (err, events) {
-        if (err) {
-            res.status(500).json("Error while fetching records. " + err);
-        }
-        res.json(events);
+        answerGet(res,err,events);
     });
 }
 
 function getEventById(req, res) {
     Event.find({_id: req.swagger.params.id.value}, function (err, event) {
-        if (err) {
-            res.status(500).json("Error while fetching event. " + err);
-        } else {
-            res.json(event);
-        }
+        answerGet(err, event);
     });
 }
 
@@ -35,15 +31,7 @@ function postParticipation(req, res) {
     var participation = {shooter: shooterId, result: resultId};
 
 
-    Event.update({_id: eventId}, {$push: {participations: participation}}, function (err, numAffected) {
-        if (err) {
-            res.status(500).json("Error while pushing participation. " + err);
-        } else {
-            res.json({
-                code: 200,
-                type: "SUCCESS",
-                message: "Participation added"
-            });
-        }
+    Event.update({_id: eventId}, {$push: {participations: participation}}, function (err) {
+        answerUpdate(res, err);
     });
 }

@@ -1,6 +1,10 @@
 "use strict";
 
-var Shooter = require("../helpers/models.js").Shooter
+var Shooter = require("../helpers/models.js").Shooter,
+    answer = require("./answer.js"),
+    answerGet = answer.answerGet,
+    answerUpdate = answer.answerUpdate;
+
 
 module.exports = {
     getShooterById: getShooterById,
@@ -12,13 +16,13 @@ module.exports = {
 function getShooterById(req, res) {
     var id = req.swagger.params.id.value;
     Shooter.find({_id: id}, function (err, shooter) {
-        res.json(shooter);
+        answerGet(res,err,shooter);
     });
 }
 
 function getShooters(req, res) {
     Shooter.find(function (err, shooters) {
-        res.json(shooters);
+        answerGet(res,err,shooters);
     });
 }
 
@@ -29,9 +33,6 @@ function postShooterByName(req, res) {
     });
 
     shooter.save(function (err) {
-        if (err) {
-            res.status(500).json("Error while writing record. " + err);
-        }
-        res.json(shooter);
+        answerUpdate(res, err, shooter._id);
     });
 }
