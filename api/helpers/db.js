@@ -5,25 +5,33 @@
 
 var mongoose = require("mongoose");
 
-function connect(){
-    var connectionString = buildDatabaseUrl();
+/**
+ * Opens a connection to the database
+ * @param {Object} parameters for connecting to the database. Provide the following values: host, name, user (optional), password (optional)
+ * @param {Function} onError callback when connection failed
+ * @param {Function} onOpen callback when connection is established
+ */
+function connect(parameters, onError, onOpen){
+    checkParameters(parameters);
+
+    var connectionString = buildDatabaseUrl(parameters);
     mongoose.connect(connectionString);
     var db = mongoose.connection;
-    db.on("error", function (callback) {
-        console.error("Error! No connection to MongoDB");
-        process.exit(1);
-    });
-    db.once("open", function (callback) {
-        console.log("Connection to MongoDB successfully established");
-    });
+
+    if(onError){
+        db.on("error", onError);
+    }
+
+    if(onOpen){
+        db.on("open", onOpen);
+    }
 }
 
-// Helper functions
-function buildDatabaseUrl() {
-    var mongoHost = process.env.DB_HOST;
-    var mongoDatabaseName = process.env.DB_NAME;
-    var mongoUser = process.env.DB_USER;
-    var mongoPassword = process.env.DB_PASSWORD;
+function buildDatabaseUrl(parameters) {
+    var mongoHost = parameters.host;
+    var mongoDatabaseName = parameters.name;
+    var mongoUser = parameters.user;
+    var mongoPassword = parameters.password;
 
     var url;
     if (mongoUser && mongoPassword) {
@@ -33,6 +41,26 @@ function buildDatabaseUrl() {
     }
 
     return url;
+}
+
+function checkParameters(parameters){
+    if(!parameters){
+        throw new Error("No connection parameters defined!");
+    }
+    if(!parameters.host){
+        throw new Error("No 'host' specified!");
+    }
+    if(!parameters.name){
+        throw new Error("No 'name' specified!");
+    }
+    if(XOR(parameters.user,parameters.password)){
+        throw new Error("Please provide correct authentication parameters ('user' and 'password')!");
+    }
+
+
+    function XOR(a,b){
+        return ( a ? 1 : 0 ) ^ ( b ? 1 : 0 );
+    }
 }
 
 module.exports = connect;

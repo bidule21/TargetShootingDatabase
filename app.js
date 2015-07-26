@@ -3,23 +3,43 @@ var SwaggerExpress = require("swagger-express-mw"),
     app = require("express")(),
     connectToDatabase = require("./api/helpers/db.js");
 
-connectToDatabase();
+connectToDatabase({
+    host: process.env.DB_HOST,
+    name: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
+}, onDatabaseConnectionFailed, onDatabaseConnectionEstablished(initSwagger));
 
-var config = {
-  appRoot: __dirname // required config
-};
+function onDatabaseConnectionFailed(){
+    console.log("Couldn't establish a connection to the database");
+}
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+function onDatabaseConnectionEstablished(successor){
+    console.log("Connection to MongoDB established.");
+    successor();
+}
 
-  // install middleware
-  swaggerExpress.register(app);
+function initSwagger(){
+    var config = {
+        appRoot: __dirname // required config
+    };
 
-  var port = process.env.PORT || 10010;
-  app.listen(port);
+    SwaggerExpress.create(config, function(err, swaggerExpress) {
+        if (err) { throw err; }
 
-  console.log("The server is running on http://127.0.0.1:" + port);
-});
+        // install middleware
+        swaggerExpress.register(app);
 
-module.exports = app; // for testing
+        var port = process.env.PORT || 10010;
+        app.listen(port);
+
+        console.log("The server is running on http://127.0.0.1:" + port);
+    });
+
+    module.exports = app; // for testing
+}
+
+
+
+
 
