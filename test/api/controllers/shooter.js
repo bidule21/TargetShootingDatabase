@@ -48,7 +48,7 @@ describe("controllers", function () {
                         shooter.save();
 
                         request(app)
-                            .get("/shooter/"+shooter._id)
+                            .get("/shooter/" + shooter._id)
                             .set("Accept", "application/json")
                             .expect("Content-Type", /json/)
                             .expect(200)
@@ -66,9 +66,9 @@ describe("controllers", function () {
                 );
             });
 
-            it("returns an error message when the shooter hasn't been found", function(done){
+            it("returns an error message when the shooter hasn't been found", function (done) {
                 invokeDatabaseTest(
-                    function(){
+                    function () {
                         request(app)
                             .get("/shooter/aaaaaaaaaaaaaaaaaaaaaaaa")
                             .set("Accept", "application/json")
@@ -90,5 +90,80 @@ describe("controllers", function () {
             });
         });
 
+        describe("POST /shooter/", function () {
+            it("should create a shooter when parameters are sufficient", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/shooter?firstname=John&lastname=Doe")
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                // Check answer
+                                should.exist(res.body);
+
+                                res.body.code.should.eql(200);
+                                res.body.type.should.eql("SUCCESS");
+                                res.body.message.should.eql("Record updated");
+                                var id = res.body.affected;
+
+                                // Check database
+                                Shooter.findById(id, function (err) {
+                                    if (err) throw new Error("Shooter not found on database");
+                                    done();
+                                });
+                            });
+                    }
+                );
+            });
+
+            it("should respond with 400 'Bad Request' when all parameters are missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/shooter")
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
+
+            it("should respond with 400 'Bad Request' when lastname is missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/shooter?firstname=John")
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
+
+            it("should respond with 400 'Bad Request' when firstname is missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/shooter?lastname=Doe")
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
+        });
     });
 });

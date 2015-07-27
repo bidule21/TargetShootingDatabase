@@ -226,6 +226,6 @@ definitions:
       message: 
         description: A more detailed message of what has been done
         type: string
-      result:
+      affected:
         description: The affected record
         type: string
