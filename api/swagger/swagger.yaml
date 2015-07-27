@@ -28,7 +28,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
     post:
       operationId: postShooterByName
       summary: Adds a shooter
@@ -52,7 +52,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
   /shooter/{id}:
     x-swagger-router-controller: shooter
     get:
@@ -76,7 +76,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
   /event:
     x-swagger-router-controller: event
     get:
@@ -98,7 +98,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
   /event/{id}:
     x-swagger-router-controller: event
     get:
@@ -118,7 +118,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
   /event/{id}/participation:
     x-swagger-router-controller: event
     post:
@@ -148,7 +148,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
   /result:
     x-swagger-router-controller: result
     post:
@@ -169,7 +169,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Answer"
 definitions:
   Shooter:
     required:
@@ -212,12 +212,6 @@ definitions:
       shooter:
         type: string
       result:
-        type: string
-  Error:
-    required:
-      - message
-    properties:
-      message:
         type: string
   Answer:
     required:
