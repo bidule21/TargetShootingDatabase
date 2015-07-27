@@ -5,14 +5,15 @@ var should = require("should"),
     invokeDatabaseTest = require("../../database-test-env.js"),
     app = require("../../../app"),
     Shooter = require("../../../api/helpers/models.js").Shooter,
-    Result = require("../../../api/helpers/models.js").Result;
+    Result = require("../../../api/helpers/models.js").Result,
+    Event = require("../../../api/helpers/models.js").Event;
 
 describe("controllers", function () {
 
     describe("shooter", function () {
 
         describe("GET /shooter/", function () {
-            it("should return all shooters on the database", function (done) {
+            it("should return all shooters", function (done) {
                 invokeDatabaseTest(
                     function () {
                         new Shooter({firstname: "John", lastname: "Doe"}).save();
@@ -84,7 +85,7 @@ describe("controllers", function () {
                                 res.body.code.should.eql(404);
                                 res.body.type.should.eql("ERROR");
                                 res.body.message.should.eql("Not found");
-                                should.not.exist(res.body.result);
+                                should.not.exist(res.body.affected);
 
                                 done();
                             });
@@ -222,6 +223,88 @@ describe("controllers", function () {
                 );
             });
         });
+    });
+
+    describe("event", function(){
+        describe("GET /event", function(){
+            it("should return all events", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        new Event({description: "My Event 1"}).save();
+                        new Event({description: "My Event 2"}).save();
+
+                        request(app)
+                            .get("/event")
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                should.exist(res.body[0]);
+                                should.exist(res.body[1]);
+                                should.not.exist(res.body[2]);
+
+                                should.exist(res.body[0]._id);
+                                res.body[0].description.should.eql("My Event 1");
+
+                                should.exist(res.body[1]._id);
+                                res.body[1].description.should.eql("My Event 2");
+
+                                done();
+                            });
+                    });
+            });
+        });
+
+        describe("GET /event/{id}", function () {
+            it("should return an event when a valid id has been specified", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        var event = new Event({description: "My Event"});
+                        event.save();
+
+                        request(app)
+                            .get("/event/" + event._id)
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                should.exist(res.body);
+                                should.exist(res.body._id);
+                                res.body.description.should.eql("My Event");
+
+                                done();
+                            });
+                    }
+                );
+            });
+
+            it("returns an error message when the event hasn't been found", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .get("/event/aaaaaaaaaaaaaaaaaaaaaaaa")
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(404)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                should.exist(res.body);
+                                res.body.code.should.eql(404);
+                                res.body.type.should.eql("ERROR");
+                                res.body.message.should.eql("Not found");
+                                should.not.exist(res.body.affected);
+
+                                done();
+                            });
+                    }
+                );
+            });
+        });
+
     });
 
 });

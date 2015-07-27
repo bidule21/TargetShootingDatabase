@@ -19,8 +19,8 @@ function getEvents(req, res) {
 }
 
 function getEventById(req, res) {
-    Event.find({_id: req.swagger.params.id.value}, function (err, event) {
-        answerGet(err, event);
+    Event.findById(req.swagger.params.id.value, function (err, event) {
+        answerGet(res, err, event);
     });
 }
 

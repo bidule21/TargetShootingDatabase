@@ -115,6 +115,10 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Event"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Answer"
         default:
           description: Error
           schema:
