@@ -11,19 +11,23 @@ var mongoose = require("mongoose");
  * @param {Function} onError callback when connection failed
  * @param {Function} onOpen callback when connection is established
  */
-function connect(parameters, onError, onOpen){
-    checkParameters(parameters);
+function connect(parameters, onError, onOpen) {
+    if (mongoose.connection.readyState) {
+        onOpen();
+    } else {
+        checkParameters(parameters);
 
-    var connectionString = buildDatabaseUrl(parameters);
-    mongoose.connect(connectionString);
-    var db = mongoose.connection;
+        var connectionString = buildDatabaseUrl(parameters);
+        mongoose.connect(connectionString);
+        var connection = mongoose.connection;
 
-    if(onError){
-        db.on("error", onError);
-    }
+        if (onError) {
+            connection.on("error", onError);
+        }
 
-    if(onOpen){
-        db.on("open", onOpen);
+        if (onOpen) {
+            connection.on("open", onOpen);
+        }
     }
 }
 
@@ -43,22 +47,22 @@ function buildDatabaseUrl(parameters) {
     return url;
 }
 
-function checkParameters(parameters){
-    if(!parameters){
+function checkParameters(parameters) {
+    if (!parameters) {
         throw new Error("No connection parameters defined!");
     }
-    if(!parameters.host){
+    if (!parameters.host) {
         throw new Error("No 'host' specified!");
     }
-    if(!parameters.name){
+    if (!parameters.name) {
         throw new Error("No 'name' specified!");
     }
-    if(XOR(parameters.user,parameters.password)){
+    if (XOR(parameters.user, parameters.password)) {
         throw new Error("Please provide correct authentication parameters ('user' and 'password')!");
     }
 
 
-    function XOR(a,b){
+    function XOR(a, b) {
         return ( a ? 1 : 0 ) ^ ( b ? 1 : 0 );
     }
 }
