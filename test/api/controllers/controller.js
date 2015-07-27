@@ -206,6 +206,21 @@ describe("controllers", function () {
                     }
                 );
             });
+
+            it("should respond with 400 'Bad Request' when a body is missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/result")
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res){
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
         });
     });
 
