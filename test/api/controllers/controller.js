@@ -4,7 +4,8 @@ var should = require("should"),
     request = require("supertest"),
     invokeDatabaseTest = require("../../database-test-env.js"),
     app = require("../../../app"),
-    Shooter = require("../../../api/helpers/models.js").Shooter;
+    Shooter = require("../../../api/helpers/models.js").Shooter,
+    Result = require("../../../api/helpers/models.js").Result;
 
 describe("controllers", function () {
     describe("shooter", function () {
@@ -166,4 +167,44 @@ describe("controllers", function () {
             });
         });
     });
+
+    describe("result", function () {
+        describe("POST /result/", function () {
+            it("should create a result when parameters are sufficient", function (done) {
+                var resultBody = {
+                    score: 100,
+                    category: "MyCategory"
+                };
+
+                invokeDatabaseTest(
+                    function () {
+                        request(app)
+                            .post("/result")
+                            .send(resultBody)
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                // Check answer
+                                should.exist(res.body);
+
+                                res.body.code.should.eql(200);
+                                res.body.type.should.eql("SUCCESS");
+                                res.body.message.should.eql("Record updated");
+                                var id = res.body.affected;
+
+                                // Check database
+                                Result.findById(id, function (err) {
+                                    if (err) throw new Error("Result not found on database");
+                                    done();
+                                });
+                            });
+                    }
+                );
+            });
+        });
+    });
+
 });
