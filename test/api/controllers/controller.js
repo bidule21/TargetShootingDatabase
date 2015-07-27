@@ -27,9 +27,7 @@ describe("controllers", function () {
                             .end(function (err, res) {
                                 should.not.exist(err);
 
-                                should.exist(res.body[0]);
-                                should.exist(res.body[1]);
-                                should.not.exist(res.body[2]);
+                                res.body.length.should.eql(2);
 
                                 should.exist(res.body[0]._id);
                                 res.body[0].firstname.should.eql("John");
@@ -112,6 +110,7 @@ describe("controllers", function () {
                                 res.body.code.should.eql(200);
                                 res.body.type.should.eql("OK");
                                 res.body.message.should.eql("Record updated");
+                                should.exist(res.body.affected);
                                 var id = res.body.affected;
 
                                 // Check database
@@ -196,6 +195,7 @@ describe("controllers", function () {
                                 res.body.code.should.eql(200);
                                 res.body.type.should.eql("OK");
                                 res.body.message.should.eql("Record updated");
+                                should.exist(res.body.affected);
                                 var id = res.body.affected;
 
                                 // Check database
@@ -215,7 +215,7 @@ describe("controllers", function () {
                             .post("/result")
                             .set("Accept", "application/json")
                             .expect(400)
-                            .end(function (err, res){
+                            .end(function (err, res) {
                                 should.not.exist(err);
                                 done();
                             });
@@ -225,8 +225,8 @@ describe("controllers", function () {
         });
     });
 
-    describe("event", function(){
-        describe("GET /event", function(){
+    describe("event", function () {
+        describe("GET /event", function () {
             it("should return all events", function (done) {
                 invokeDatabaseTest(
                     function () {
@@ -241,9 +241,7 @@ describe("controllers", function () {
                             .end(function (err, res) {
                                 should.not.exist(err);
 
-                                should.exist(res.body[0]);
-                                should.exist(res.body[1]);
-                                should.not.exist(res.body[2]);
+                                res.body.length.should.eql(2);
 
                                 should.exist(res.body[0]._id);
                                 res.body[0].description.should.eql("My Event 1");
@@ -305,6 +303,91 @@ describe("controllers", function () {
             });
         });
 
+        describe("POST /event/{id}/participation", function () {
+            it("should append a participation to the specified event", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        var event = new Event({description: "My Event"});
+                        event.save();
+
+                        var fakeShooterId = "aaaaaaaaaaaaaaaaaaaaaaaa";
+                        var fakeResultId = "bbbbbbbbbbbbbbbbbbbbbbbb";
+
+                        var url = "/event/" + event._id + "/participation?shooterId=" + fakeShooterId + "&resultId=" + fakeResultId;
+
+                        request(app)
+                            .post(url)
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                // Check answer
+                                should.exist(res.body);
+
+                                res.body.code.should.eql(200);
+                                res.body.type.should.eql("OK");
+                                res.body.message.should.eql("Record updated");
+                                should.exist(res.body.affected);
+                                var id = res.body.affected;
+
+                                // Check database
+                                Event.findById(id, function (err, reloadedEvent) {
+                                    if (err) throw new Error("Event not found on database");
+
+                                    should.exist(reloadedEvent.participations);
+                                    reloadedEvent.participations.length.should.eql(1);
+                                    reloadedEvent.participations[0].result.toString().should.eql(fakeResultId);
+                                    reloadedEvent.participations[0].shooter.toString().should.eql(fakeShooterId);
+
+                                    done();
+                                });
+                            });
+                    }
+                );
+            });
+
+            it("should respond with 400 'Bad Request' when a resultId is missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        var event = new Event({description: "My Event"});
+                        event.save();
+
+                        var fakeShooterId = "aaaaaaaaaaaaaaaaaaaaaaaa";
+
+                        request(app)
+                            .post("/event/"+event._id+"/participation?shooterId="+fakeShooterId)
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
+
+            it("should respond with 400 'Bad Request' when a shooterId is missing", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        var event = new Event({description: "My Event"});
+                        event.save();
+
+                        var fakeResultId = "bbbbbbbbbbbbbbbbbbbbbbbb";
+
+                        request(app)
+                            .post("/event/"+event._id+"/participation?resultId="+fakeResultId)
+                            .set("Accept", "application/json")
+                            .expect(400)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+                                done();
+                            });
+                    }
+                );
+            });
+        });
     });
 
 });

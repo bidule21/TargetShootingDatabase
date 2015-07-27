@@ -31,7 +31,7 @@ function postParticipation(req, res) {
     var participation = {shooter: shooterId, result: resultId};
 
 
-    Event.update({_id: eventId}, {$push: {participations: participation}}, function (err) {
-        answerUpdate(res, err);
+    Event.findByIdAndUpdate(eventId, {$push: {participations: participation}}, function (err) {
+        answerUpdate(res, err, eventId);
     });
 }
