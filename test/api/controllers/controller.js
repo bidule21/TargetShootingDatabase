@@ -8,7 +8,9 @@ var should = require("should"),
     Result = require("../../../api/helpers/models.js").Result;
 
 describe("controllers", function () {
+
     describe("shooter", function () {
+        
         describe("GET /shooter/", function () {
             it("should return all shooters on the database", function (done) {
                 invokeDatabaseTest(
