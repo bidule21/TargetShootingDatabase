@@ -22,7 +22,7 @@ function invokeDatabaseTest(verifications) {
     };
 
     function throwErr(err) {
-        throw new Error(err);
+        throw new Error("No database connection! Did you turn on your local MongoDB instance? " + err);
     }
 
     function onConnect() {
