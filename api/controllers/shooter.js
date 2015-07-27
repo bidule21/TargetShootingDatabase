@@ -15,7 +15,7 @@ module.exports = {
 
 function getShooterById(req, res) {
     var id = req.swagger.params.id.value;
-    Shooter.find({_id: id}, function (err, shooter) {
+    Shooter.findById(id, function (err, shooter) {
         answerGet(res,err,shooter);
     });
 }

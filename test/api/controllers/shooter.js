@@ -14,8 +14,7 @@ describe("controllers", function () {
                     function () {
                         new Shooter({firstname: "John", lastname: "Doe"}).save();
                         new Shooter({firstname: "Max", lastname: "Mustermann"}).save();
-                    },
-                    function () {
+
                         request(app)
                             .get("/shooter")
                             .set("Accept", "application/json")
@@ -41,5 +40,55 @@ describe("controllers", function () {
                     });
             });
         });
+        describe("GET /shooter/{id}", function () {
+            it("should return a shooter when a valid id has been specified", function (done) {
+                invokeDatabaseTest(
+                    function () {
+                        var shooter = new Shooter({firstname: "John", lastname: "Doe"});
+                        shooter.save();
+
+                        request(app)
+                            .get("/shooter/"+shooter._id)
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(200)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                should.exist(res.body);
+                                should.exist(res.body._id);
+                                res.body.firstname.should.eql("John");
+                                res.body.lastname.should.eql("Doe");
+
+                                done();
+                            });
+                    }
+                );
+            });
+
+            it("returns an error message when the shooter hasn't been found", function(done){
+                invokeDatabaseTest(
+                    function(){
+                        request(app)
+                            .get("/shooter/aaaaaaaaaaaaaaaaaaaaaaaa")
+                            .set("Accept", "application/json")
+                            .expect("Content-Type", /json/)
+                            .expect(404)
+                            .end(function (err, res) {
+                                should.not.exist(err);
+
+                                should.exist(res.body);
+                                res.body.code.should.eql(404);
+                                res.body.type.should.eql("ERROR");
+                                res.body.message.should.eql("Not found");
+                                should.not.exist(res.body.result);
+
+                                done();
+                            });
+                    }
+                );
+            });
+        });
+
     });
 });

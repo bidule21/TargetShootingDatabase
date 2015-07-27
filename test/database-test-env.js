@@ -8,10 +8,9 @@ process.env.DB_NAME = "TSDB_TEST";
 
 /**
  * Executes a test which is being exec
- * @param setup {Function}
  * @param verifications {Function}
  */
-function invokeDatabaseTest(setup, verifications) {
+function invokeDatabaseTest(verifications) {
     var mongoose = require("mongoose");
     var connect = require("../api/helpers/db.js");
 
@@ -27,7 +26,6 @@ function invokeDatabaseTest(setup, verifications) {
     }
 
     function onConnect() {
-        setup();
         verifications();
         clearDatabase();
     }

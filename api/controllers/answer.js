@@ -8,9 +8,13 @@ var TYPE_SUCCESS = "SUCCESS";
 
 function answerGet(res, err, data){
     if (err) {
-        res.status(500).json(createErrorObject(err));
+        res.status(500).json(createErrorObject(500, err));
     }else{
-        res.json(data);
+        if(!data || data.length===0){
+            res.status(404).json(createErrorObject(404, "Not found"));
+        }else {
+            res.status(200).json(data);
+        }
     }
 }
 
@@ -58,8 +62,8 @@ function createSuccessObject(message){
  * @param err {string}
  * @returns {{code, type, message}|{code: *, type: *, message: *}}
  */
-function createErrorObject(err){
-    return createAnswerObject(500, TYPE_ERROR, err);
+function createErrorObject(errorCode, err){
+    return createAnswerObject(errorCode, TYPE_ERROR, err);
 }
 
 module.exports.answerGet = answerGet;
