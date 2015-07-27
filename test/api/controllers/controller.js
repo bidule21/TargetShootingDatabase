@@ -10,7 +10,7 @@ var should = require("should"),
 describe("controllers", function () {
 
     describe("shooter", function () {
-        
+
         describe("GET /shooter/", function () {
             it("should return all shooters on the database", function (done) {
                 invokeDatabaseTest(
@@ -109,7 +109,7 @@ describe("controllers", function () {
                                 should.exist(res.body);
 
                                 res.body.code.should.eql(200);
-                                res.body.type.should.eql("SUCCESS");
+                                res.body.type.should.eql("OK");
                                 res.body.message.should.eql("Record updated");
                                 var id = res.body.affected;
 
@@ -193,7 +193,7 @@ describe("controllers", function () {
                                 should.exist(res.body);
 
                                 res.body.code.should.eql(200);
-                                res.body.type.should.eql("SUCCESS");
+                                res.body.type.should.eql("OK");
                                 res.body.message.should.eql("Record updated");
                                 var id = res.body.affected;
 

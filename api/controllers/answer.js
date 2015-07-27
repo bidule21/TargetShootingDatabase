@@ -4,7 +4,7 @@
 "use strict";
 
 var TYPE_ERROR = "ERROR";
-var TYPE_SUCCESS = "SUCCESS";
+var TYPE_SUCCESS = "OK";
 
 function answerGet(res, err, data){
     if (err) {
