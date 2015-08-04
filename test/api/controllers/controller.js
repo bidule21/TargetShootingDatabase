@@ -8,6 +8,34 @@ var should = require("should"),
     Result = require("../../../api/helpers/models.js").Result,
     Event = require("../../../api/helpers/models.js").Event;
 
+function checkDocumentUpdatedMessage(err, res) {
+    should.not.exist(err);
+
+    should.exist(res.body);
+    res.body.code.should.eql(200);
+    res.body.type.should.eql("OK");
+    res.body.message.should.eql("Record updated");
+    should.exist(res.body.affected);
+}
+
+function checkBodyForOneRecord(err, res, check) {
+    should.not.exist(err);
+
+    should.exist(res.body);
+    should.exist(res.body._id);
+    check(res.body);
+}
+
+function checkNotFoundMessage(err, res) {
+    should.not.exist(err);
+
+    should.exist(res.body);
+    res.body.code.should.eql(404);
+    res.body.type.should.eql("ERROR");
+    res.body.message.should.eql("Not found");
+    should.not.exist(res.body.affected);
+}
+
 describe("controllers", function () {
 
     describe("shooter", function () {
@@ -55,14 +83,11 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(200)
                             .end(function (err, res) {
-                                should.not.exist(err);
-
-                                should.exist(res.body);
-                                should.exist(res.body._id);
-                                res.body.firstname.should.eql("John");
-                                res.body.lastname.should.eql("Doe");
-
-                                done();
+                                checkBodyForOneRecord(err, res, function (body) {
+                                    body.firstname.should.eql("John");
+                                    body.lastname.should.eql("Doe");
+                                    done();
+                                });
                             });
                     }
                 );
@@ -77,14 +102,7 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(404)
                             .end(function (err, res) {
-                                should.not.exist(err);
-
-                                should.exist(res.body);
-                                res.body.code.should.eql(404);
-                                res.body.type.should.eql("ERROR");
-                                res.body.message.should.eql("Not found");
-                                should.not.exist(res.body.affected);
-
+                                checkNotFoundMessage(err, res);
                                 done();
                             });
                     }
@@ -102,19 +120,9 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(200)
                             .end(function (err, res) {
-                                should.not.exist(err);
+                                checkDocumentUpdatedMessage(err, res);
 
-                                // Check answer
-                                should.exist(res.body);
-
-                                res.body.code.should.eql(200);
-                                res.body.type.should.eql("OK");
-                                res.body.message.should.eql("Record updated");
-                                should.exist(res.body.affected);
-                                var id = res.body.affected;
-
-                                // Check database
-                                Shooter.findById(id, function (err) {
+                                Shooter.findById(res.body.affected, function (err) {
                                     if (err) throw new Error("Shooter not found on database");
                                     done();
                                 });
@@ -187,19 +195,10 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(200)
                             .end(function (err, res) {
-                                should.not.exist(err);
-
-                                // Check answer
-                                should.exist(res.body);
-
-                                res.body.code.should.eql(200);
-                                res.body.type.should.eql("OK");
-                                res.body.message.should.eql("Record updated");
-                                should.exist(res.body.affected);
-                                var id = res.body.affected;
+                                checkDocumentUpdatedMessage(err, res);
 
                                 // Check database
-                                Result.findById(id, function (err) {
+                                Result.findById(res.body.affected, function (err) {
                                     if (err) throw new Error("Result not found on database");
                                     done();
                                 });
@@ -268,12 +267,10 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(200)
                             .end(function (err, res) {
-                                should.not.exist(err);
-                                should.exist(res.body);
-                                should.exist(res.body._id);
-                                res.body.description.should.eql("My Event");
-
-                                done();
+                                checkBodyForOneRecord(err, res, function (body) {
+                                    body.description.should.eql("My Event");
+                                    done();
+                                });
                             });
                     }
                 );
@@ -288,14 +285,7 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(404)
                             .end(function (err, res) {
-                                should.not.exist(err);
-
-                                should.exist(res.body);
-                                res.body.code.should.eql(404);
-                                res.body.type.should.eql("ERROR");
-                                res.body.message.should.eql("Not found");
-                                should.not.exist(res.body.affected);
-
+                                checkNotFoundMessage(err, res);
                                 done();
                             });
                     }
@@ -321,19 +311,10 @@ describe("controllers", function () {
                             .expect("Content-Type", /json/)
                             .expect(200)
                             .end(function (err, res) {
-                                should.not.exist(err);
-
-                                // Check answer
-                                should.exist(res.body);
-
-                                res.body.code.should.eql(200);
-                                res.body.type.should.eql("OK");
-                                res.body.message.should.eql("Record updated");
-                                should.exist(res.body.affected);
-                                var id = res.body.affected;
+                                checkDocumentUpdatedMessage(err, res);
 
                                 // Check database
-                                Event.findById(id, function (err, reloadedEvent) {
+                                Event.findById(res.body.affected, function (err, reloadedEvent) {
                                     if (err) throw new Error("Event not found on database");
 
                                     should.exist(reloadedEvent.participations);
@@ -357,7 +338,7 @@ describe("controllers", function () {
                         var fakeShooterId = "aaaaaaaaaaaaaaaaaaaaaaaa";
 
                         request(app)
-                            .post("/event/"+event._id+"/participation?shooterId="+fakeShooterId)
+                            .post("/event/" + event._id + "/participation?shooterId=" + fakeShooterId)
                             .set("Accept", "application/json")
                             .expect(400)
                             .end(function (err, res) {
@@ -377,7 +358,7 @@ describe("controllers", function () {
                         var fakeResultId = "bbbbbbbbbbbbbbbbbbbbbbbb";
 
                         request(app)
-                            .post("/event/"+event._id+"/participation?resultId="+fakeResultId)
+                            .post("/event/" + event._id + "/participation?resultId=" + fakeResultId)
                             .set("Accept", "application/json")
                             .expect(400)
                             .end(function (err, res) {
