@@ -23,7 +23,7 @@ function answerUpdate(res, err, affected){
         var answerObject = createErrorObject(err);
         res.status(500).json(answerObject);
     } else {
-        var answerObject = createSuccessObject("Record updated");
+        var answerObject = createSuccessObject("Document updated");
 
         if(affected){
             answerObject.affected = affected;

@@ -14,7 +14,7 @@ function checkDocumentUpdatedMessage(err, res) {
     should.exist(res.body);
     res.body.code.should.eql(200);
     res.body.type.should.eql("OK");
-    res.body.message.should.eql("Record updated");
+    res.body.message.should.eql("Document updated");
     should.exist(res.body.affected);
 }
 
